@@ -5,51 +5,52 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-	[SerializeField] private Rigidbody rb;
+    public Rigidbody rb;
+    public float movementSpeed = 5f;
+    public Vector3 movementInput;
 
-	[SerializeField] private float movementSpeed = 5f;
-	[SerializeField] private Vector3 movementInput;
-	private Matrix4x4 isometricMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 45, 0));
+    // States
+    public State currentState;
+    public MoveState moveState;
+    public DashState dashState;
+    public InteractState interactState;
+    public SpecialState specialState;
 
-	private bool isDashing = false;
-	private bool canDash = true;
-	[SerializeField] private float dashDistance = 2f;
-	[SerializeField] private float dashDuration = 0.2f;
+    void Start()
+    {
+        // Initialize states
+        moveState = new MoveState(this);
+        dashState = new DashState(this);
+        interactState = new InteractState(this);
+        specialState = new SpecialState(this);
 
+        // Set initial state
+        TransitionToState(moveState);
+    }
 
-	void Start()
-	{
-	}
+    void Update()
+    {
+        currentState.HandleInput();
+        currentState.Update();
+    }
 
-	void Update()
-	{
-		if (!isDashing) GetMovementInput();
+    private void FixedUpdate()
+    {
+        currentState.FixedUpdate();
+    }
 
-		if (Input.GetKeyDown(KeyCode.Space) && canDash)
-		{
-			isDashing = true;
-			canDash = false;
-		}
-	}
+    public void TransitionToState(State newState)
+    {
+        if (currentState != null)
+        {
+            currentState.Exit();
+        }
 
-	private void FixedUpdate()
-	{
-		Move();
-	}
+        currentState = newState;
 
-	private void GetMovementInput()
-	{
-		movementInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-	}
-
-	private void Move()
-	{
-		if (isDashing) return;
-
-		if (movementInput.magnitude == 0) return;
-		
-		movementInput = isometricMatrix.MultiplyPoint3x4(movementInput);
-		movementInput.Normalize();
-		rb.Move(transform.position + movementInput * (movementSpeed * Time.deltaTime), Quaternion.LookRotation(movementInput));
-	}
+        if (currentState != null)
+        {
+            currentState.Enter();
+        }
+    }
 }
