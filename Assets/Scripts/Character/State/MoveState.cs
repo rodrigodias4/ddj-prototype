@@ -40,8 +40,8 @@ public class MoveState : State
 	{
 		movementInput = isometricMatrix.MultiplyPoint3x4(movementInput);
 		movementInput.Normalize();
-		character.rb.MovePosition(character.transform.position +
-		                          movementInput * (character.movementSpeed * Time.deltaTime));
+		character.rb.Move(character.transform.position + movementInput * (character.movementSpeed * Time.deltaTime),
+			Quaternion.LookRotation(movementInput));
 	}
 
 	public override void Exit()
