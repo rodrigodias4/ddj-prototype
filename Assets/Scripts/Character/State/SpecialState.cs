@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class SpecialState : State
 {
     public SpecialState(CharacterMovement character) : base(character) { }
@@ -16,7 +17,7 @@ public class SpecialState : State
         // Special action, like charging, happens while the button is held
         if (!Input.GetMouseButton(0)) 
         {
-            character.TransitionToState(character.moveState);
+            character.TransitionToState(new MoveState(character));
         }
     }
 
