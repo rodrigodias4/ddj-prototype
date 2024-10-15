@@ -11,7 +11,6 @@ public class SpecialState : State
     public GameObject sliderCanvas;
     private float targetValue; // target speed 
     private bool slidingForward = true; // direction
-    private bool isConstantSpeed = false;
     public float easeInSpeed = 1.0f;  // Speed during the ease-in phase
     public float constantSpeed = 2f;
     public float currentSpeed;
@@ -31,7 +30,6 @@ public class SpecialState : State
         slider.value = slider.minValue;
         currentSpeed = easeInSpeed;
         slidingForward = true;
-        isConstantSpeed = false;
         easeInTimer = 0f;
     }
 
@@ -42,21 +40,18 @@ public class SpecialState : State
             character.TransitionToState(character.moveState);
         }
 
-        if (!isConstantSpeed){
-            easeInTimer += Time.deltaTime;
+        VisualizePower();
+    }
 
-            float t = Mathf.Clamp01(easeInTimer / easeInDuration); // normalized time 
+    public void VisualizePower(){
+        easeInTimer += Time.deltaTime;
 
-            // ease from current value to target (max) value
-            currentSpeed = Mathf.Lerp(easeInSpeed, constantSpeed, t);  // Interpolates the speed
-            slider.value = Mathf.MoveTowards(slider.value, targetValue, currentSpeed * Time.deltaTime);
-            
-            // if timer reached, switch to constant?
-            if (Mathf.Abs(slider.value - targetValue) < 0.01f)
-            {
-                currentSpeed = constantSpeed;
-            }
-        }
+        float t = Mathf.Clamp01(easeInTimer / easeInDuration); // normalized time 
+
+        // ease from current value to target (max) value
+        currentSpeed = Mathf.Lerp(easeInSpeed, constantSpeed, t);  // Interpolates the speed
+        slider.value = Mathf.MoveTowards(slider.value, targetValue, currentSpeed * Time.deltaTime);
+
 
         if (slidingForward)
             targetValue = slider.maxValue;  // Slide to max
@@ -72,7 +67,7 @@ public class SpecialState : State
         }
         // Debug.Log("slider.value:" + slider.value);
     }
-
+    
     public override void Exit()
     {
         // slider.value = 0;
