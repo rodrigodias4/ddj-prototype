@@ -53,4 +53,9 @@ public class CharacterMovement : MonoBehaviour
 	{
 		dashCooldownCur = Mathf.Clamp(dashCooldownCur - Time.deltaTime, 0f, dashCooldown);
 	}
+
+	public void CustomerHit()
+	{
+		currentState.CustomerHit();
+	}
 }

@@ -37,4 +37,9 @@ public class DashState : State
 		yield return new WaitForSeconds(character.dashDuration);
 		character.TransitionToState(new MoveState(character));
 	}
+
+	public override void CustomerHit()
+	{
+		Debug.Log("Player hit customer with dash");
+	}
 }
