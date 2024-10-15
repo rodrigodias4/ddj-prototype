@@ -6,7 +6,11 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
 	public Rigidbody rb;
-	public float movementSpeed = 5f;
+	public float movementSpeed = 10f;
+	public float dashDistance = 7.5f;
+	public float dashDuration = 0.2f;
+	public float dashCooldown = 2f;
+	public float dashCooldownCur = 0f; // Added explicit for possible visual in UI
 
 	// States
 	private State currentState;
@@ -22,6 +26,7 @@ public class CharacterMovement : MonoBehaviour
 	{
 		currentState.HandleInput();
 		currentState.Update();
+		DecrementCooldowns();
 	}
 
 	private void FixedUpdate()
@@ -42,5 +47,10 @@ public class CharacterMovement : MonoBehaviour
 		{
 			currentState.Enter();
 		}
+	}
+
+	private void DecrementCooldowns()
+	{
+		dashCooldownCur = Mathf.Clamp(dashCooldownCur - Time.deltaTime, 0f, dashCooldown);
 	}
 }
