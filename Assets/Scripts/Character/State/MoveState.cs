@@ -38,6 +38,7 @@ public class MoveState : State
 
 	public override void FixedUpdate()
 	{
+		if (movementInput.sqrMagnitude == 0) return;
 		movementInput = isometricMatrix.MultiplyPoint3x4(movementInput);
 		movementInput.Normalize();
 		character.rb.Move(character.transform.position + movementInput * (character.movementSpeed * Time.deltaTime),

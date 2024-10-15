@@ -7,8 +7,6 @@ public class CharacterMovement : MonoBehaviour
 {
 	public Rigidbody rb;
 	public float movementSpeed = 5f;
-	public float dashDistance = 10f;
-	public float dashDuration = 0.2f;
 
 	// States
 	private State currentState;
@@ -16,6 +14,7 @@ public class CharacterMovement : MonoBehaviour
 	void Start()
 	{
 		// Set initial state
+		rb = GetComponent<Rigidbody>();
 		TransitionToState(new MoveState(this));
 	}
 

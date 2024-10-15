@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class DashState : State
 {
-	private float dashDuration = 0.3f;
-
 	public DashState(CharacterMovement character) : base(character)
 	{
 	}
