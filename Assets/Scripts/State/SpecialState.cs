@@ -18,9 +18,17 @@ public class SpecialState : State
     private float easeInTimer;  // Tracks time during ease-in phase
 
     public SpecialState(CharacterMovement character) : base(character) { }
+    public Camera mainCamera;  // Reference to the main camera
+    // public Transform characterBoedy;  // Reference to the character's body or the part that needs rotating
+  
+    private Quaternion originalCanvasRotation; //canvas's rotation
 
     public override void Enter()
     {
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
         Debug.Log("Entering Special State");
         Debug.Log("character" + character);
         this.sliderCanvas = character.gameObject.transform.Find("PowerBarCanvas").gameObject;
@@ -31,6 +39,8 @@ public class SpecialState : State
         currentSpeed = easeInSpeed;
         slidingForward = true;
         easeInTimer = 0f;
+        // characterBody = character.transform;
+        originalCanvasRotation = sliderCanvas.transform.rotation;
     }
 
     public override void Update()
@@ -41,7 +51,30 @@ public class SpecialState : State
         }
 
         VisualizePower();
+        CalculatePlayerFacing();
     }
+
+    public void CalculatePlayerFacing()
+    {
+        // mouse position in the world space
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        // horizontal plane at character's height
+        Plane groundPlane = new Plane(Vector3.up, character.transform.position);
+
+        float rayDistance;
+
+        // https://docs.unity3d.com/ScriptReference/Plane.Raycast.html
+        if (groundPlane.Raycast(ray, out rayDistance)) // dist from starting ray to plane
+        {
+            // ray plane intersection
+            Vector3 targetPosition = ray.GetPoint(rayDistance);
+            Vector3 direction = (targetPosition - character.transform.position).normalized;
+            character.transform.rotation = Quaternion.LookRotation(direction); 
+            sliderCanvas.transform.rotation = originalCanvasRotation; // does not rotate canvas
+        }
+    }
+
 
     public void VisualizePower(){
         easeInTimer += Time.deltaTime;
@@ -67,7 +100,7 @@ public class SpecialState : State
         }
         // Debug.Log("slider.value:" + slider.value);
     }
-    
+
     public override void Exit()
     {
         // slider.value = 0;
