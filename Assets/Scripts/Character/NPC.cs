@@ -1,46 +1,47 @@
 using UnityEngine;
 
-public class NPC : Character
-{
-    // Additional properties for NPCs
-    public string[] dialogues;
-
-    // Start is called before the first frame update
-    protected override void Start()
+namespace Assets.Scripts.Characters {
+    public class NPC : Character
     {
-        base.Start(); // Call the base start function
-        Debug.Log($"{characterName} is an NPC with dialogue options.");
-    }
+        // Additional properties for NPCs
+        public string[] dialogues;
 
-    // NPC-specific behavior for dialogue
-    public void Speak()
-    {
-        if (dialogues.Length > 0)
+        // Start is called before the first frame update
+        protected override void Start()
         {
-            foreach (string dialogue in dialogues)
+            base.Start(); // Call the base start function
+        }
+
+        // NPC-specific behavior for dialogue
+        public void Speak()
+        {
+            if (dialogues.Length > 0)
             {
-                Debug.Log($"{characterName} says: {dialogue}");
+                foreach (string dialogue in dialogues)
+                {
+                    Debug.Log($"{characterName} says: {dialogue}");
+                }
+            }
+            else
+            {
+                Debug.Log($"{characterName} has nothing to say.");
             }
         }
-        else
+
+        // Override the Move method if NPCs don't need to move or have different movement logic
+        public override void Move(Vector3 direction)
         {
-            Debug.Log($"{characterName} has nothing to say.");
+            // NPCs might have different movement patterns or may not move at all
+            Debug.Log($"{characterName} is stationary and doesn't move like a player.");
+            // Alternatively, call base.Move(direction) if you want NPCs to move like characters
         }
-    }
 
-    // Override the Move method if NPCs don't need to move or have different movement logic
-    public override void Move(Vector3 direction)
-    {
-        // NPCs might have different movement patterns or may not move at all
-        Debug.Log($"{characterName} is stationary and doesn't move like a player.");
-        // Alternatively, call base.Move(direction) if you want NPCs to move like characters
-    }
-
-    // NPCs may have unique death behavior
-    protected override void Die()
-    {
-        base.Die();
-        Debug.Log($"{characterName} was an NPC and has now disappeared.");
-        // Add additional NPC death behavior if needed
+        // NPCs may have unique death behavior
+        protected override void Die()
+        {
+            base.Die();
+            Debug.Log($"{characterName} was an NPC and has now disappeared.");
+            // Add additional NPC death behavior if needed
+        }
     }
 }
