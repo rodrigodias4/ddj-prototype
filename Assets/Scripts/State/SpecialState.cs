@@ -19,7 +19,6 @@ public class SpecialState : State
 
     public SpecialState(CharacterMovement character) : base(character) { }
     public Camera mainCamera;  // Reference to the main camera
-    // public Transform characterBoedy;  // Reference to the character's body or the part that needs rotating
   
     private Quaternion originalCanvasRotation; //canvas's rotation
 
