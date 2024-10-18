@@ -138,7 +138,7 @@ namespace Assets.Scripts.Characters
             }
             else if (customerQueue.Contains(customer))
             {
-                customerQueue.Dequeue();
+                DequeueSpecificCustomer(customer);
                 // Move all remaining customers forward in the queue
                 for (int i = 0; i < customerQueue.Count; i++)
                 {
@@ -170,5 +170,31 @@ namespace Assets.Scripts.Characters
             // Move the customer to the back of the queue using NavMesh
             customerScript.MoveCustomerToPosition(queuePositions[customerQueue.Count - 1].position);
         }
+
+        public void DequeueSpecificCustomer(Customer targetCustomer)
+        {
+            Queue<Customer> newQueue = new Queue<Customer>();
+
+            // Iterate through the existing queue
+            while (customerQueue.Count > 0)
+            {
+                // Dequeue each customer
+                Customer customer = customerQueue.Dequeue();
+
+                // If it's not the customer we want to remove, enqueue it to the new queue
+                if (customer != targetCustomer)
+                {
+                    newQueue.Enqueue(customer);
+                }
+                else
+                {
+                    Debug.Log($"Removed {customer.characterName} from the queue.");
+                }
+            }
+
+            // Replace the old queue with the new one
+            customerQueue = newQueue;
+        }
+
     }
 }
