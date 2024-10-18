@@ -7,14 +7,14 @@ public class SpecialState : State
 {
 
 
-    public Slider slider;
-    public GameObject sliderCanvas;
+    private Slider slider;
+    private GameObject sliderCanvas;
     private float targetValue; // target speed 
     private bool slidingForward = true; // direction
-    public float easeInSpeed = 1.0f;  // Speed during the ease-in phase
-    public float constantSpeed = 2f;
-    public float currentSpeed;
-    public float easeInDuration = 2.0f; // How long to ease in before switching to constant speed
+    private float easeInSpeed = 1.0f;  // Speed during the ease-in phase
+    private float constantSpeed = 2f;
+    private float currentSpeed;
+    private float easeInDuration = 2.0f; // How long to ease in before switching to constant speed
     private float easeInTimer;  // Tracks time during ease-in phase
 
     public SpecialState(CharacterMovement character) : base(character) { }
@@ -22,13 +22,19 @@ public class SpecialState : State
   
     private Quaternion originalCanvasRotation; //canvas's rotation
 
+    private bool grappling; // Indicates whether the player is currently grappling
+    private float maxDistance = 25f; // Max distance for the grappling hook
+    private RaycastHit hit;
+    private Transform grappleTarget;  // Object we are grappling towards
+    private LineRenderer lineRenderer;  // Reference to the LineRenderer
+
     public override void Enter()
     {
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
         }
-        Debug.Log("Entering Special State");
+        // Debug.Log("Entering Special State");
         Debug.Log("character" + character);
         this.sliderCanvas = character.gameObject.transform.Find("PowerBarCanvas").gameObject;
         this.slider = sliderCanvas.GetComponentInChildren<Slider>();
@@ -39,21 +45,38 @@ public class SpecialState : State
         slidingForward = true;
         easeInTimer = 0f;
         // characterBody = character.transform;
-        originalCanvasRotation = sliderCanvas.transform.rotation;
+        originalCanvasRotation = mainCamera.transform.rotation;
+
+        // Reference the LineRenderer from the character or instantiate one
+        lineRenderer = character.GetComponent<LineRenderer>();
+        if (lineRenderer == null)
+        {
+            Debug.LogError("No LineRenderer attached to the character!");
+        }
+
+        // Initially disable the LineRenderer
+        lineRenderer.enabled = false;
+        lineRenderer.positionCount = 2;  // We need two points: start (character) and end (target)
+
     }
 
     public override void Update()
     {
+        sliderCanvas.transform.rotation = originalCanvasRotation; // does not rotate canvas
+        Vector3 forward = character.transform.TransformDirection(Vector3.forward) * 100;
+        Debug.DrawRay(character.transform.position, forward, Color.green);
+
+        if (grappling){return;}
         if (!Input.GetMouseButton(0)) 
         {
-            character.TransitionToState(character.moveState);
+            FireGrapplingHook();  // Fire grappling hook when mouse button is released
         }
 
         VisualizePower();
         CalculatePlayerFacing();
     }
 
-    public void CalculatePlayerFacing()
+    private void CalculatePlayerFacing()
     {
         // mouse position in the world space
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -75,7 +98,7 @@ public class SpecialState : State
     }
 
 
-    public void VisualizePower(){
+    private void VisualizePower(){
         easeInTimer += Time.deltaTime;
 
         float t = Mathf.Clamp01(easeInTimer / easeInDuration); // normalized time 
@@ -100,10 +123,109 @@ public class SpecialState : State
         // Debug.Log("slider.value:" + slider.value);
     }
 
+    private void FireGrapplingHook()
+    {
+        // Freeze character while firing the grappling hook
+        // character.GetComponent<Rigidbody>().isKinematic = true;
+        Vector3 pos = character.transform.position;
+        pos.y += 1;
+
+        
+        // Fire a ray from the player's position in the forward direction
+        if (Physics.Raycast(pos, character.transform.forward, out hit, maxDistance))
+        {
+            if (hit.collider.CompareTag("Customer"))
+            {
+                GameObject hitObject = hit.collider.gameObject;
+                grappleTarget = hitObject.transform;
+                character.StartCoroutine(HandleHit(hitObject));
+            }
+        }
+        else
+        {
+            character.StartCoroutine(HandleHit(null));
+            Debug.Log("Grappling hook missed.");
+        }
+    }
+
+    private IEnumerator HandleHit(GameObject hitObject)
+    {
+        // if hit, check slider.value to determine behavior
+            // kill - animate to target + kill signal
+            // grapple - animate to target + move target
+            // nudge - animate to target + move target
+        // else. just animate from max distance
+
+        grappling = true;  // Prevent further input while grappling
+        lineRenderer.enabled = true;  // Enable the LineRenderer to start visualizing the grapple
+
+
+        if (hitObject != null) // if hit
+        {
+            Rigidbody rb = hitObject.GetComponent<Rigidbody>();
+            if ( slider.value > 0.5){
+                Debug.Log(slider.value + "Killed");
+                // Kill code comes here 
+                hitObject.SetActive(false);
+                yield return character.StartCoroutine(AnimateTentacle(hitObject.transform.position));
+            }else if (slider.value <= 0.5 && slider.value > 0.3){
+                Debug.Log(slider.value + "Grappled");
+                while (Vector3.Distance(hitObject.transform.position, character.transform.position) > 1f)
+                {
+                    // Move the object toward the player over time
+                    Vector3 direction = (character.transform.position - hitObject.transform.position).normalized;
+                    rb.MovePosition(hitObject.transform.position + direction * Time.deltaTime * 20f);  // Adjust speed as needed
+                    if (lineRenderer.enabled && grappleTarget != null)
+                    {
+                        Vector3 pos = character.transform.position;
+                        pos.y += 1;
+                        Vector3 grapplepos = grappleTarget.position;
+                        grapplepos.y += 1;
+                        lineRenderer.SetPosition(0, pos);  // Start point at the player
+                        lineRenderer.SetPosition(1, grapplepos);        // End point at the target object
+                    }
+                    yield return null;  // Wait for the next frame
+                }
+            }else{
+                Debug.Log(slider.value + "Vaguely Nudged");
+                // Nudge code comes here 
+                Vector3 nudgeDirection = (hitObject.transform.position - character.transform.position).normalized;
+                rb.AddForce(nudgeDirection * 5f, ForceMode.Impulse);  // Adjust force as needed
+                yield return character.StartCoroutine(AnimateTentacle(hitObject.transform.position));
+            }
+        }else{
+            // nothing!
+            Vector3 target = Vector3.MoveTowards(character.transform.position,
+                            character.transform.TransformDirection(Vector3.forward)*100,maxDistance);
+            yield return character.StartCoroutine(AnimateTentacle(target));
+        }
+
+        Debug.Log("Special complete.");
+        lineRenderer.enabled = false;
+        grappling = false;  // Reset grappling state
+        character.TransitionToState(character.moveState);
+    }
+
+    private IEnumerator AnimateTentacle(Vector3 target){
+        while(Vector3.Distance(target, character.transform.position) > 1f)
+        {
+            Vector3 direction = (character.transform.position - target).normalized;
+            target = target + direction * Time.deltaTime * 40f;
+            if (lineRenderer.enabled){
+                Vector3 pos = character.transform.position;
+                pos.y += 1;
+                Vector3 targetPos = target;
+                targetPos.y += 1;
+                lineRenderer.SetPosition(0, pos);  // Start point at the player
+                lineRenderer.SetPosition(1, targetPos);        // End point at the target object
+            }
+            yield return null;  // Wait for the next frame
+        }
+    }
+
     public override void Exit()
     {
-        // slider.value = 0;
         sliderCanvas.SetActive(false);
-        Debug.Log("Exiting Special State");
+        // Debug.Log("Exiting Special State");
     }
 }
