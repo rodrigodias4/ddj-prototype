@@ -91,25 +91,25 @@ namespace Assets.Scripts.Characters
         {
             if (customerQueue.Count > 0)
             {
-                // Remove the customer from the front of the queue
-                GameObject servedCustomer = customerQueue.Dequeue();
-
-                // Move all remaining customers forward in the queue
-                for (int i = 0; i < customerQueue.Count; i++)
-                {
-                    GameObject remainingCustomer = customerQueue.ToArray()[i];
-                    MoveCustomerToPosition(remainingCustomer, queuePositions[i].position);
-                }
-
-                // Now move the served customer to a random unoccupied chair
+                // Move the served customer to a random unoccupied chair
                 GameObject selectedChair = FindUnoccupiedChair();
                 if (selectedChair != null)
                 {
                     // Mark the chair as occupied
                     occupiedChairs.Add(selectedChair);
 
+                    // Remove the customer from the front of the queue
+                    GameObject servedCustomer = customerQueue.Dequeue();
+
                     // Move the customer to the selected chair using NavMesh
                     MoveCustomerToPosition(servedCustomer, selectedChair.transform.position);
+
+                    // Move all remaining customers forward in the queue
+                    for (int i = 0; i < customerQueue.Count; i++)
+                    {
+                        GameObject remainingCustomer = customerQueue.ToArray()[i];
+                        MoveCustomerToPosition(remainingCustomer, queuePositions[i].position);
+                    }
                 }
                 else
                 {
