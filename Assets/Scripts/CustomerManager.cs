@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.AI;  // Required for NavMesh
 
 namespace Assets.Scripts.Characters
 {
@@ -12,9 +11,8 @@ namespace Assets.Scripts.Characters
         public Transform spawnPoint;           // Fixed spawn location
         public List<Transform> queuePositions; // List of queue positions (back to front)
         public float timeBetweenSpawns = 15f;   // Time delay between each customer spawn
-        public float moveSpeed = 2f;           // Not used anymore since NavMeshAgent will control the speed
-        public int customerCount = 1;
-        private Queue<GameObject> customerQueue = new Queue<GameObject>(); // Tracks customers in the queue
+        private int customerCount = 1;
+        private Queue<Customer> customerQueue = new Queue<Customer>(); // Tracks customers in the queue
 
         // List of all chairs and a list of occupied chairs
         private List<GameObject> chairs = new List<GameObject>();
@@ -49,21 +47,11 @@ namespace Assets.Scripts.Characters
                 GameObject newCustomer = Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
                 Customer customerScript = newCustomer.GetComponent<Customer>();
 
-                // Add a NavMeshAgent to the customer if it doesn't already exist
-                NavMeshAgent agent = newCustomer.GetComponent<NavMeshAgent>();
-                if (agent == null)
-                {
-                    agent = newCustomer.AddComponent<NavMeshAgent>();
-                }
-
-                // Set the agent's speed (optional if set in the prefab)
-                agent.speed = moveSpeed;
-
                 // Add the customer to the queue
-                customerQueue.Enqueue(newCustomer);
+                customerQueue.Enqueue(customerScript);
 
                 // Move the customer to the back of the queue using NavMesh
-                MoveCustomerToPosition(newCustomer, queuePositions[customerQueue.Count - 1].position);
+                StartCoroutine(MoveCustomerAfterInitialization(customerScript));
 
                 // Set properties (optional)
                 customerScript.characterName = "Customer " + customerCount++;
@@ -71,18 +59,6 @@ namespace Assets.Scripts.Characters
             else
             {
                 Debug.Log("Queue is full!");
-            }
-        }
-
-        // Use NavMeshAgent to move the customer to the target position
-        void MoveCustomerToPosition(GameObject customer, Vector3 targetPosition)
-        {
-            NavMeshAgent agent = customer.GetComponent<NavMeshAgent>();
-
-            if (agent != null && agent.isOnNavMesh)
-            {
-                // Set the destination for the NavMeshAgent
-                agent.SetDestination(targetPosition);
             }
         }
 
@@ -99,16 +75,17 @@ namespace Assets.Scripts.Characters
                     occupiedChairs.Add(selectedChair);
 
                     // Remove the customer from the front of the queue
-                    GameObject servedCustomer = customerQueue.Dequeue();
+                    Customer servedCustomer = customerQueue.Dequeue();
 
                     // Move the customer to the selected chair using NavMesh
-                    MoveCustomerToPosition(servedCustomer, selectedChair.transform.position);
+                    servedCustomer.isMovingToSeat = true;
+                    servedCustomer.MoveCustomerToPosition(selectedChair.transform.position);
 
                     // Move all remaining customers forward in the queue
                     for (int i = 0; i < customerQueue.Count; i++)
                     {
-                        GameObject remainingCustomer = customerQueue.ToArray()[i];
-                        MoveCustomerToPosition(remainingCustomer, queuePositions[i].position);
+                        Customer remainingCustomer = customerQueue.ToArray()[i];
+                        remainingCustomer.MoveCustomerToPosition(queuePositions[i].position);
                     }
                 }
                 else
@@ -139,8 +116,59 @@ namespace Assets.Scripts.Characters
                 return availableChairs[randomIndex];
             }
 
-            // Return null if no unoccupied chairs are found
             return null;
+        }
+
+        // Called when a customer has been served
+        public void OnCustomerServed(Customer customer)
+        {
+            Debug.Log($"{customer.characterName} has been served and is now sitting.");
+        }
+
+        // Called when a customer leaves the diner
+        public void OnCustomerLeft(Customer customer)
+        {
+            Debug.Log($"{customer.characterName} is leaving.");
+
+            // Free up any occupied chairs if the customer was sitting
+            GameObject chair = FindOccupiedChairByCustomer(customer.gameObject);
+            if (chair != null)
+            {
+                occupiedChairs.Remove(chair);
+            }
+            else if (customerQueue.Contains(customer))
+            {
+                customerQueue.Dequeue();
+                // Move all remaining customers forward in the queue
+                for (int i = 0; i < customerQueue.Count; i++)
+                {
+                    Customer remainingCustomer = customerQueue.ToArray()[i];
+                    remainingCustomer.MoveCustomerToPosition(queuePositions[i].position);
+                }
+            }
+        }
+
+        // Find the occupied chair for a specific customer
+        GameObject FindOccupiedChairByCustomer(GameObject customer)
+        {
+            foreach (var chair in occupiedChairs)
+            {
+                // Assuming the customer is directly sitting on the chair's position
+                if (Vector3.Distance(chair.transform.position, customer.transform.position) < 0.5f)
+                {
+                    return chair;
+                }
+            }
+            return null;
+        }
+        // Coroutine to move the customer after a short delay
+        IEnumerator MoveCustomerAfterInitialization(Customer customerScript)
+        {
+            // Wait a frame or two for the NavMeshAgent to initialize
+            yield return new WaitForSeconds(0.1f);
+
+            // Move the customer to the back of the queue using NavMesh
+            customerScript.MoveCustomerToPosition(queuePositions[customerQueue.Count - 1].position);
         }
     }
 }

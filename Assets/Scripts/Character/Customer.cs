@@ -1,53 +1,68 @@
 using UnityEngine;
-using TMPro;  // If using TextMeshPro
+using TMPro;
+using UnityEngine.AI;
+using System.Collections;
 
-namespace Assets.Scripts.Characters {
+namespace Assets.Scripts.Characters
+{
     public class Customer : NPC
     {
-        // Additional properties for Customer
         public enum Order { Burger, Ham, Stew };
-        public float patience;       // How long the customer will wait before leaving
-        public bool isServed;        // Whether the customer has been served
-
-        private float waitTime;      // Internal tracking of how long the customer has waited
-        public Order customerOrder;  // Store the current order
+        public float patience = 60f;       // How long the customer will wait before leaving
+        public bool isServed = false;      // Whether the customer has been served
+        private float waitTime = 0f;       // Internal tracking of how long the customer has waited
+        private float eatingTime = 3f;     // How long the customer takes to eat
+        public Order customerOrder;        // Store the current order
 
         // Reference to the speech bubble components
-        private GameObject speechBubble; // The speech bubble GameObject
-        private TMP_Text speechBubbleText; // Text component to display the order
+        private GameObject speechBubble;
+        private TMP_Text speechBubbleText;
+        private UnityEngine.AI.NavMeshAgent agent; // Reference to the NavMeshAgent component
+        private CustomerManager customerManager;  // Cached reference to the CustomerManager
+        private Vector3 initialPosition;          // Initial position of the customer
+        public bool isMovingToSeat = false;
+        private bool isLeaving = false; 
 
-        // Start is called before the first frame update
         protected override void Start()
         {
             base.Start();
-            patience = 60f;          // Default patience time in seconds
-            isServed = false;
 
+            initialPosition = transform.position;
+
+            customerManager = FindObjectOfType<CustomerManager>();
             // Select a random order for the customer
             customerOrder = (Order)Random.Range(0, System.Enum.GetValues(typeof(Order)).Length);
 
             Debug.Log($"{characterName} entered the diner and is waiting to place an order. Random Order: {customerOrder}");
 
             // Find the speech bubble GameObject and text component
-            speechBubble = transform.Find("SpeechBubble").gameObject; // Adjust the name if necessary
-            speechBubbleText = speechBubble.GetComponentInChildren<TMP_Text>(); // Adjust if using TextMeshPro
+            speechBubble = transform.Find("SpeechBubble").gameObject;
+            speechBubbleText = speechBubble.GetComponentInChildren<TMP_Text>();
 
-            // Show the speech bubble with the customer's order
-            ShowSpeechBubble();
+            // Add a NavMeshAgent to the customer if it doesn't already exist
+            agent = gameObject.GetComponent<NavMeshAgent>();
+            if (agent == null)
+            {
+                agent = gameObject.AddComponent<NavMeshAgent>();
+            }
+            Debug.Log(agent);
+            
+            // Set the agent's speed (optional if set in the prefab)
+            agent.speed = speed;
+
         }
 
         // Show the speech bubble with the customer's order
-        private void ShowSpeechBubble()
+        public void ShowSpeechBubble()
         {
             if (speechBubble != null && speechBubbleText != null)
             {
-                // Set the speech bubble active and update the text
                 speechBubble.SetActive(true);
                 speechBubbleText.text = customerOrder.ToString();
             }
         }
 
-        // Method to serve the customer
+        // Serve the customer
         public void Serve()
         {
             if (!isServed)
@@ -55,6 +70,9 @@ namespace Assets.Scripts.Characters {
                 isServed = true;
                 Debug.Log($"{characterName} has been served {customerOrder}.");
                 HideSpeechBubble();
+                // Start the coroutine to wait before leaving
+                StartCoroutine(EatFood(eatingTime)); 
+
             }
             else
             {
@@ -62,7 +80,7 @@ namespace Assets.Scripts.Characters {
             }
         }
 
-        // Hide the speech bubble after the customer has been served
+        // Hide the speech bubble after being served
         private void HideSpeechBubble()
         {
             if (speechBubble != null)
@@ -71,17 +89,33 @@ namespace Assets.Scripts.Characters {
             }
         }
 
-        // Method to handle customer waiting
+        // Update is called once per frame
         private void Update()
         {
             if (!isServed)
             {
                 waitTime += Time.deltaTime;
-                if (waitTime >= patience)
+                if (waitTime >= patience && !isLeaving)
                 {
-                    Leave();
+                    Leave();  // Customer leaves after losing patience
                 }
             }
+            // Check if customer is moving to a seat and has reached the destination
+            if (isMovingToSeat && agent != null && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+            {
+                isMovingToSeat = false;  // Stop checking once the seat is reached
+                ShowSpeechBubble();  // Show the speech bubble when seated
+            }
+            
+            // Check if customer is leaving and has reached the initial position
+            if (isLeaving && agent != null && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+            {
+                isLeaving = false;  // Customer has finished leaving
+                Debug.Log($"{characterName} has left the diner.");
+                // Destroy the customer GameObject
+                Destroy(gameObject);
+            }
+
         }
 
         // Customer leaves after being served or when impatient
@@ -96,8 +130,39 @@ namespace Assets.Scripts.Characters {
                 Debug.Log($"{characterName} got impatient and left the diner without being served.");
             }
 
-            // Remove the speech bubble and the customer GameObject
-            Destroy(gameObject);
+            isLeaving = true;  // Set the leaving flag to true
+            
+            HideSpeechBubble();
+
+            MoveCustomerToPosition(initialPosition);
+
+            // Notify CustomerManager that the customer has left
+            customerManager?.OnCustomerLeft(this);
+        }
+
+        // Handle customer death/cleanup logic
+        protected override void Die()
+        {
+            // TODO: Add functionality for when the customer dies
+        }
+
+        // Use NavMeshAgent to move the customer to the target position
+        public void MoveCustomerToPosition(Vector3 targetPosition)
+        {
+            Debug.Log($"{characterName} is moving to position: {targetPosition}");
+            if (agent != null && agent.isOnNavMesh)
+            {
+                // Set the destination for the NavMeshAgent
+                agent.SetDestination(targetPosition);
+            }
+        }
+        private IEnumerator EatFood(float eatingTime)
+        {
+            // Wait for the specified amount of time (in seconds)
+            yield return new WaitForSeconds(eatingTime);
+
+            // Call the Leave method after the wait
+            Leave();
         }
     }
 }
