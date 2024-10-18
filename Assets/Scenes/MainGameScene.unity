@@ -391,6 +391,42 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &86219794 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8830206838568206636, guid: 4abdfcbaeab2a4010a0b882e00e7f0a5, type: 3}
+  m_PrefabInstance: {fileID: 2133702751}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &86219796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 86219794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 0}
+  m_BuildHeightMesh: 0
 --- !u!1 &177928113
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,8 +722,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5476c9aaf715c4df6a6fc7c59bc0492e, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 5476c9aaf715c4df6a6fc7c59bc0492e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3636,7 +3672,10 @@ PrefabInstance:
     - {fileID: 7280210894297881567, guid: 4abdfcbaeab2a4010a0b882e00e7f0a5, type: 3}
     - {fileID: 1220545909698318091, guid: 4abdfcbaeab2a4010a0b882e00e7f0a5, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8830206838568206636, guid: 4abdfcbaeab2a4010a0b882e00e7f0a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 86219796}
   m_SourcePrefab: {fileID: 100100000, guid: 4abdfcbaeab2a4010a0b882e00e7f0a5, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

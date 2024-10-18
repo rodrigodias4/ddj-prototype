@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     private float nextUpdateTime = 0.0f;
     private bool gameEnded = false;
     public float timeElapsed = 0.0f;
-    public CustomerSpawner customerSpawner {get; private set; }
+    public CustomerManager customerManager {get; private set; }
     public static class GameConstants
     {
         public const float UPDATE_INTERVAL = 2.0f;
