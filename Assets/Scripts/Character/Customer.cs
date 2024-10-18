@@ -144,6 +144,11 @@ namespace Assets.Scripts.Characters
         protected override void Die()
         {
             // TODO: Add functionality for when the customer dies
+            Debug.Log($"{characterName} is dying.");
+
+            customerManager?.OnCustomerLeft(this);
+
+            Destroy(gameObject);
         }
 
         // Use NavMeshAgent to move the customer to the target position
