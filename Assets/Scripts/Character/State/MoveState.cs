@@ -20,7 +20,7 @@ public class MoveState : State
 	public override void HandleInput()
 	{
 		movementInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (Input.GetKeyDown(KeyCode.Space) && character.dashCooldownCur == 0)
 		{
 			character.TransitionToState(new DashState(character));
 		}
