@@ -38,11 +38,15 @@ public class MoveState : State
 
 	public override void FixedUpdate()
 	{
-		if (movementInput.sqrMagnitude == 0) return;
+		if (movementInput.sqrMagnitude == 0)
+		{
+			character.rb.velocity = Vector3.zero;
+			return;
+		}
 		movementInput = isometricMatrix.MultiplyPoint3x4(movementInput);
 		movementInput.Normalize();
-		character.rb.Move(character.transform.position + movementInput * (character.movementSpeed * Time.deltaTime),
-			Quaternion.LookRotation(movementInput));
+		character.rb.velocity = movementInput * character.movementSpeed;
+		character.transform.forward = movementInput;
 	}
 
 	public override void Exit()
