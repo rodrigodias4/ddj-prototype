@@ -1603,12 +1603,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: 
-  health: 0
+  health: 10
   speed: 3
   dialogues: []
-  patience: 0
+  patience: 17
   isServed: 0
   customerOrder: 0
+  isMovingToSeat: 0
 --- !u!195 &-3702206364382019019
 NavMeshAgent:
   m_ObjectHideFlags: 0
