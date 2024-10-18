@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 725408668675138018}
   m_Layer: 0
   m_Name: chair_C (3)
-  m_TagString: Untagged
+  m_TagString: Chair
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 9035073275277613737}
   m_Layer: 0
   m_Name: chair_C (1)
-  m_TagString: Untagged
+  m_TagString: Chair
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
