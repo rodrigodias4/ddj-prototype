@@ -18,6 +18,7 @@ namespace Assets.Scripts.Characters
         private GameObject speechBubble;
         private TMP_Text speechBubbleText;
         private UnityEngine.AI.NavMeshAgent agent; // Reference to the NavMeshAgent component
+        private Camera mainCamera; // Reference to the main camera
         private CustomerManager customerManager;  // Cached reference to the CustomerManager
         private Vector3 initialPosition;          // Initial position of the customer
         public bool isMovingToSeat = false;
@@ -50,6 +51,8 @@ namespace Assets.Scripts.Characters
             // Set the agent's speed (optional if set in the prefab)
             agent.speed = speed;
 
+            // Cache a reference to the main camera
+            mainCamera = Camera.main;
         }
 
         // Show the speech bubble with the customer's order
@@ -116,6 +119,13 @@ namespace Assets.Scripts.Characters
                 Destroy(gameObject);
             }
 
+            // Make sure the speech bubble is always facing the camera
+            if (speechBubble != null && mainCamera != null)
+            {
+                // Make the speech bubble look at the camera
+                speechBubble.transform.LookAt(speechBubble.transform.position + mainCamera.transform.rotation * Vector3.forward,
+                    mainCamera.transform.rotation * Vector3.up);
+            }
         }
 
         // Customer leaves after being served or when impatient
@@ -143,7 +153,6 @@ namespace Assets.Scripts.Characters
         // Handle customer death/cleanup logic
         protected override void Die()
         {
-            // TODO: Add functionality for when the customer dies
             Debug.Log($"{characterName} is dying.");
 
             customerManager?.OnCustomerLeft(this);
