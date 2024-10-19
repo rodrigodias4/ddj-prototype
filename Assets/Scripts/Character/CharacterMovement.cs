@@ -2,9 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CharacterMovement : MonoBehaviour
 {
+	public UnityEvent onCharacterDashStart;
+	public UnityEvent onCharacterDashEnd;
+	
 	public Rigidbody rb;
 	public float movementSpeed = 10f;
 	public float dashDistance = 7.5f;

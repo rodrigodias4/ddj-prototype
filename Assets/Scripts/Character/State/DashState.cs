@@ -13,6 +13,7 @@ public class DashState : State
 	public override void Enter()
 	{
 		Debug.Log("Entering Dash State");
+		character.onCharacterDashStart.Invoke();
 		character.rb.velocity = speedbonus * character.transform.forward * (character.dashDistance / character.dashDuration);
 		character.StartCoroutine(EndDash());
 	}
@@ -28,6 +29,7 @@ public class DashState : State
 	public override void Exit()
 	{
 		Debug.Log("Exiting Dash State");
+		character.onCharacterDashEnd.Invoke();
 		character.rb.velocity = Vector3.zero;
 		character.dashCooldownCur = character.dashCooldown;
 	}
