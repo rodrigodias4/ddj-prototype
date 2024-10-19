@@ -1,15 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class CharacterInteract : MonoBehaviour
 {
     private IInteractable closestInteractable = null;
     public float interactRange = 2f;
+    [SerializeField] private GameObject uiInteract;
+    private UIInteractable uiInteractable;
+    [SerializeField] private Camera mainCamera;
+    
     // Start is called before the first frame update
     void Start()
     {
-        
+        Assert.IsNotNull(uiInteract);
+        Assert.IsNotNull(mainCamera);
+        uiInteractable = uiInteract.GetComponent<UIInteractable>();
     }
 
     // Update is called once per frame
@@ -30,8 +38,18 @@ public class CharacterInteract : MonoBehaviour
                 closestDistance = newDistance;
             }
         }
-        
-        closestInteractable?.InteractRange();
+
+        if (closestInteractable is not null)
+        {
+            closestInteractable.InteractRange();
+            uiInteract.transform.position = mainCamera.WorldToScreenPoint(closestInteractable.GetTransform().position) + new Vector3(10f, 20f, 0f);
+            uiInteractable.SetText(closestInteractable.GetTooltip());
+            uiInteract.SetActive(true);
+        }
+        else
+        {
+            uiInteract.SetActive(false);
+        }
     }
     
     public IInteractable GetClosestInteractable() { return closestInteractable; }

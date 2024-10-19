@@ -33,4 +33,9 @@ public class InteractableItem : MonoBehaviour, IInteractable
 	}
 
 	public Transform GetTransform() { return transform; }
+
+	public string GetTooltip()
+	{
+		return "Interact";
+	}
 }

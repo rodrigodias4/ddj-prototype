@@ -12,4 +12,6 @@ public interface IInteractable
     public void InteractRange();
 
     public Transform GetTransform();
+
+    public string GetTooltip();
 }
