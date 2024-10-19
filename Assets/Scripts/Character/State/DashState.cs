@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class DashState : State
 {
-	private float speedbonus = 2f;
 	public DashState(CharacterMovement character) : base(character)
 	{
 	}
@@ -14,7 +13,7 @@ public class DashState : State
 	{
 		Debug.Log("Entering Dash State");
 		character.onCharacterDashStart.Invoke();
-		character.rb.velocity = speedbonus * character.transform.forward * (character.dashDistance / character.dashDuration);
+		character.rb.velocity = character.transform.forward * (character.dashDistance / character.dashDuration);
 		character.StartCoroutine(EndDash());
 	}
 
