@@ -11,12 +11,17 @@ public class InteractableItem : MonoBehaviour, IInteractable
 	private bool inInteractRange = false;
 	new Renderer renderer = null;
 
-	public void Start()
+	public virtual void Start()
 	{
 		renderer = GetComponent<Renderer>();
 		Assert.IsNotNull(defaultMaterial);
 		Assert.IsNotNull(highlightMaterial);
 		Assert.IsNotNull(renderer);
+	}
+
+	public virtual void Interact(CharacterMovement character)
+	{
+		Debug.Log($"{character.name} interacting with {gameObject.name}");
 	}
 	
 	public void InteractRange()
