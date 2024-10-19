@@ -187,14 +187,15 @@ public class SpecialState : State
                     }
                     yield return null;  // Wait for the next frame
                 }
+                c.EnableCustomer();
             }else{
                 Debug.Log(slider.value + "Vaguely Nudged");
                 // Nudge code comes here 
                 Vector3 nudgeDirection = (hitObject.transform.position - character.transform.position).normalized;
                 rb.AddForce(nudgeDirection * 5f, ForceMode.Impulse);  // Adjust force as needed
+                c.EnableCustomer();
                 yield return character.StartCoroutine(AnimateTentacle(hitObject.transform.position));
             }
-            c.EnableCustomer();
         }else{
             // nothing!
             Vector3 target = Vector3.MoveTowards(character.transform.position,

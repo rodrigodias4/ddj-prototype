@@ -168,12 +168,12 @@ namespace Assets.Scripts.Characters
 
         public void DisableCustomer(){
             caught = true;
-            agent.isStopped = true;
+            agent.enabled = false;
         }
 
         public void EnableCustomer(){
             caught = false;
-            agent.isStopped = false;
+            agent.enabled = true;
         }
 
 
