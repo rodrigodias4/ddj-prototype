@@ -29,6 +29,7 @@ public class SpecialState : State
     private LineRenderer lineRenderer;  // Reference to the LineRenderer
     public Vector3 movementInput;
 	private Matrix4x4 isometricMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 45, 0));
+    private GameObject arrow;
 
 
     public override void Enter()
@@ -57,6 +58,8 @@ public class SpecialState : State
             Debug.LogError("No LineRenderer attached to the character!");
         }
 
+        arrow = character.transform.Find("arrow").gameObject;
+        arrow.SetActive(true);
         // Initially disable the LineRenderer
         lineRenderer.enabled = false;
         lineRenderer.positionCount = 2;  // We need two points: start (character) and end (target)
@@ -155,6 +158,7 @@ public class SpecialState : State
         // else. just animate from max distance
 
         grappling = true;  // One Time, no more!
+        arrow.SetActive(false);
         Vector3 characterPos = character.transform.position;
         characterPos.y += 1;
         GameObject hitObject = null;
