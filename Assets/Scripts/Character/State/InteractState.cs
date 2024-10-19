@@ -12,7 +12,7 @@ public class InteractState : State
 	public override void Enter()
 	{
 		Debug.Log("Entering Interact State");
-		// Handle interaction logic
+		character.characterInteract.GetClosestInteractable()?.Interact();
 	}
 
 	public override void Update()
