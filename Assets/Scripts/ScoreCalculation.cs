@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using Timer;
 
@@ -12,6 +13,9 @@ public class ScoreCalculation : MonoBehaviour
     public static int customerKilled;
     public static int tips;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI finalScoreText;
+    public TextMeshProUGUI highScoreText;
+    public RawImage gameOverImage;
 
     public static int highScore = 0;
 
@@ -26,6 +30,9 @@ public class ScoreCalculation : MonoBehaviour
         customerKilled = 0;
         tips = 0;
         highScore = PlayerPrefs.GetInt("HighScore", 0);
+        finalScoreText.gameObject.SetActive(false);
+        highScoreText.gameObject.SetActive(false);
+        gameOverImage.gameObject.SetActive(false);
     }
 
     void Update()
@@ -34,8 +41,15 @@ public class ScoreCalculation : MonoBehaviour
         if (timer.timeremaining <= 0)
         {
             score = dishCounter * 50 - customerKilled * 100 + tips;
-            scoreText.text = "Score: " + score;
-            scoreText.color = Color.yellow;
+            scoreText.text = "Score: " + score + "\nHigh Score: " + highScore;
+            scoreText.gameObject.SetActive(false);
+            finalScoreText.text = "Score: " + score;
+            highScoreText.text = "Hi Score: " + highScore;
+            finalScoreText.color = Color.yellow;
+            highScoreText.color = Color.yellow;
+            finalScoreText.gameObject.SetActive(true);
+            highScoreText.gameObject.SetActive(true);
+            gameOverImage.gameObject.SetActive(true);
         }
 
         if (score > highScore){
