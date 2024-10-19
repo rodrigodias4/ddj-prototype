@@ -3529,18 +3529,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -80
       objectReference: {fileID: 0}
-    - target: {fileID: 1002287227028461134, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
-      propertyPath: m_UiScaleMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1002287227028461134, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
-      propertyPath: m_ReferenceResolution.x
-      value: 1920
-      objectReference: {fileID: 0}
-    - target: {fileID: 1002287227028461134, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
-      propertyPath: m_ReferenceResolution.y
-      value: 1080
-      objectReference: {fileID: 0}
     - target: {fileID: 1280996500046113835, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3641,10 +3629,6 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 7217063552608102568, guid: de5eabb9499b849c981347196dcc0afa, type: 2}
-    - target: {fileID: 1674656375881270772, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2519500897706463402, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
       propertyPath: m_Name
       value: Canvas
@@ -3680,10 +3664,6 @@ PrefabInstance:
     - target: {fileID: 4614609103901787570, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
       propertyPath: m_HorizontalAlignment
       value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4614609103901787570, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7168891345536976528, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
       propertyPath: m_IsActive
