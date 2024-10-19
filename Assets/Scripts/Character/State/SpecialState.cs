@@ -27,6 +27,10 @@ public class SpecialState : State
     private RaycastHit hit;
     private Transform grappleTarget;  // Object we are grappling towards
     private LineRenderer lineRenderer;  // Reference to the LineRenderer
+    public Vector3 movementInput;
+	private Matrix4x4 isometricMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 45, 0));
+    private GameObject arrow;
+
 
     public override void Enter()
     {
@@ -54,9 +58,19 @@ public class SpecialState : State
             Debug.LogError("No LineRenderer attached to the character!");
         }
 
+        arrow = character.transform.Find("arrow").gameObject;
+        arrow.SetActive(true);
         // Initially disable the LineRenderer
         lineRenderer.enabled = false;
         lineRenderer.positionCount = 2;  // We need two points: start (character) and end (target)
+
+    }
+
+    public override void HandleInput(){
+        if (!Input.GetMouseButton(0) && !grappling) 
+        {
+            character.StartCoroutine(HandleHit());
+        }
 
     }
 
@@ -66,15 +80,27 @@ public class SpecialState : State
         Vector3 forward = character.transform.TransformDirection(Vector3.forward) * 100;
         Debug.DrawRay(character.transform.position, forward, Color.green);
 
-        if (grappling){return;}
-        if (!Input.GetMouseButton(0)) 
-        {
-            FireGrapplingHook();  // Fire grappling hook when mouse button is released
+        if (grappling){
+            movementInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            return;
         }
 
         VisualizePower();
         CalculatePlayerFacing();
     }
+
+	public override void FixedUpdate()
+	{
+		if (movementInput.sqrMagnitude == 0)
+		{
+			character.rb.velocity = Vector3.zero;
+			return;
+		}
+		movementInput = isometricMatrix.MultiplyPoint3x4(movementInput);
+		movementInput.Normalize();
+		character.rb.velocity = movementInput * character.movementSpeed;
+		character.transform.forward = movementInput;
+	}
 
     private void CalculatePlayerFacing()
     {
@@ -123,30 +149,7 @@ public class SpecialState : State
         // Debug.Log("slider.value:" + slider.value);
     }
 
-    private void FireGrapplingHook()
-    {
-        // Freeze character while firing the grappling hook
-        // character.GetComponent<Rigidbody>().isKinematic = true;
-        Vector3 pos = character.transform.position;
-        pos.y += 1;
-
-        Debug.Log("FireGrapplingHook");
-        // Fire a ray from the player's position in the forward direction
-        if (Physics.Raycast(pos, character.transform.forward, out hit, maxDistance)  
-            && hit.collider.CompareTag("Customer"))
-        {
-                GameObject hitObject = hit.collider.gameObject;
-                grappleTarget = hitObject.transform;
-                character.StartCoroutine(HandleHit(hitObject));
-        }
-        else
-        {
-            character.StartCoroutine(HandleHit(null));
-            Debug.Log("Grappling hook missed.");
-        }
-    }
-
-    private IEnumerator HandleHit(GameObject hitObject)
+    private IEnumerator HandleHit()
     {
         // if hit, check slider.value to determine behavior
             // kill - animate to target + kill signal
@@ -154,7 +157,17 @@ public class SpecialState : State
             // nudge - animate to target + move target
         // else. just animate from max distance
 
-        grappling = true;  // Prevent further input while grappling
+        grappling = true;  // One Time, no more!
+        arrow.SetActive(false);
+        Vector3 characterPos = character.transform.position;
+        characterPos.y += 1;
+        GameObject hitObject = null;
+        if (Physics.Raycast(characterPos, character.transform.forward, out hit, maxDistance)  
+            && hit.collider.CompareTag("Customer"))
+        {
+            hitObject = hit.collider.gameObject;
+            grappleTarget = hitObject.transform;
+        }
         lineRenderer.enabled = true;  // Enable the LineRenderer to start visualizing the grapple
 
 
@@ -193,6 +206,7 @@ public class SpecialState : State
             }
         }else{
             // nothing!
+            Debug.Log("Grappling hook missed.");
             Vector3 target = Vector3.MoveTowards(character.transform.position,
                             character.transform.TransformDirection(Vector3.forward)*100,maxDistance);
             yield return character.StartCoroutine(AnimateTentacle(target));
@@ -200,7 +214,6 @@ public class SpecialState : State
 
         Debug.Log("Special complete.");
         lineRenderer.enabled = false;
-        grappling = false;  // Reset grappling state
         character.TransitionToState(new MoveState(character));
     }
 
