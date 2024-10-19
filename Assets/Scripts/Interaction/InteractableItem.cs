@@ -34,7 +34,7 @@ public class InteractableItem : MonoBehaviour, IInteractable
 
 	public Transform GetTransform() { return transform; }
 
-	public string GetTooltip()
+	public virtual string GetTooltip()
 	{
 		return "Interact";
 	}
