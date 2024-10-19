@@ -55,9 +55,6 @@ namespace Assets.Scripts.Characters
                 GameObject newCustomer = Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
                 Customer customerScript = newCustomer.GetComponent<Customer>();
 
-                // Add the customer to the queue
-                customerQueue.Enqueue(customerScript);
-
                 // Move the customer to the back of the queue using NavMesh
                 StartCoroutine(MoveCustomerAfterInitialization(customerScript));
 
@@ -73,15 +70,16 @@ namespace Assets.Scripts.Characters
         // Call this when a customer leaves the queue
         public void Sit()
         {
+            Debug.Log($"Customer is going to sit. Queue count: {customerQueue.Count}");
             if (customerQueue.Count > 0)
             {
                 // Move the served customer to a random unoccupied chair
                 Chair selectedChair = FindUnoccupiedChair();
-                Debug.Log($"Selected chair: {selectedChair}");
                 if (selectedChair != null)
                 {
                     // Remove the customer from the front of the queue
                     Customer servedCustomer = customerQueue.Dequeue();
+                    Debug.Log($"Sitting {servedCustomer.characterName}");
 
                     // Mark the chair as occupied
                     selectedChair.customer = servedCustomer;
@@ -155,11 +153,15 @@ namespace Assets.Scripts.Characters
         // Coroutine to move the customer after a short delay
         IEnumerator MoveCustomerAfterInitialization(Customer customerScript)
         {
-            // Wait a frame or two for the NavMeshAgent to initialize
-            yield return new WaitForSeconds(0.1f);
+            // Wait a frame for the NavMeshAgent to initialize
+            yield return null;
 
+            // Add the customer to the queue
+            customerQueue.Enqueue(customerScript);
+            
             // Move the customer to the back of the queue using NavMesh
             customerScript.MoveCustomerToPosition(queuePositions[customerQueue.Count - 1].position);
+
         }
 
         public void DequeueSpecificCustomer(Customer targetCustomer)

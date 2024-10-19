@@ -47,7 +47,6 @@ namespace Assets.Scripts.Characters
             {
                 agent = gameObject.AddComponent<NavMeshAgent>();
             }
-            Debug.Log(agent);
             
             // Set the agent's speed (optional if set in the prefab)
             agent.speed = speed;
