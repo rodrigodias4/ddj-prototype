@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 522850045102902898}
   - component: {fileID: 3525846602175005143}
   - component: {fileID: 1660321399618155805}
+  - component: {fileID: 9157165518186198129}
   m_Layer: 0
   m_Name: chair_stool (2)
   m_TagString: Chair
@@ -83,6 +84,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &9157165518186198129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 867604783057835208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cddf2300ddb20a7a42d240e8f5b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chairPosition: {fileID: 0}
+  customer: {fileID: 0}
 --- !u!1 &2744134022887317952
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,6 +192,7 @@ GameObject:
   - component: {fileID: 4304344903633874666}
   - component: {fileID: 870251870626718031}
   - component: {fileID: 3168060506145805701}
+  - component: {fileID: 3444747523797975928}
   m_Layer: 0
   m_Name: chair_stool (1)
   m_TagString: Chair
@@ -249,6 +265,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3444747523797975928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3528511273474749520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cddf2300ddb20a7a42d240e8f5b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chairPosition: {fileID: 0}
+  customer: {fileID: 0}
 --- !u!1 &3773337970923627151
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +290,7 @@ GameObject:
   - component: {fileID: 4545898152767862837}
   - component: {fileID: 628707198240438160}
   - component: {fileID: 3413001277725655898}
+  - component: {fileID: 3670199236746037107}
   m_Layer: 0
   m_Name: chair_stool (4)
   m_TagString: Chair
@@ -332,6 +363,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3670199236746037107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3773337970923627151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cddf2300ddb20a7a42d240e8f5b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chairPosition: {fileID: 0}
+  customer: {fileID: 0}
 --- !u!1 &5369607039009623175
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,6 +424,7 @@ GameObject:
   - component: {fileID: 8733464649287259858}
   - component: {fileID: 5664583055524616567}
   - component: {fileID: 7599915695935925693}
+  - component: {fileID: 1752529366674446641}
   m_Layer: 0
   m_Name: chair_stool (3)
   m_TagString: Chair
@@ -451,3 +497,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1752529366674446641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8248535677617212520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cddf2300ddb20a7a42d240e8f5b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chairPosition: {fileID: 0}
+  customer: {fileID: 0}

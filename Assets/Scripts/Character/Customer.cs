@@ -23,6 +23,7 @@ namespace Assets.Scripts.Characters
         private Vector3 initialPosition;          // Initial position of the customer
         public bool isMovingToSeat = false;
         private bool isLeaving = false; 
+        public Chair occupiedChair; // Reference to the chair the customer is sitting on
 
         protected override void Start()
         {

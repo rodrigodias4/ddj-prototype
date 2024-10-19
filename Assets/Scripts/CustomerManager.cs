@@ -14,15 +14,23 @@ namespace Assets.Scripts.Characters
         private int customerCount = 1;
         private Queue<Customer> customerQueue = new Queue<Customer>(); // Tracks customers in the queue
 
-        // List of all chairs and a list of occupied chairs
-        private List<GameObject> chairs = new List<GameObject>();
-        private HashSet<GameObject> occupiedChairs = new HashSet<GameObject>();
+        // List of all chairs
+        private List<Chair> chairs = new List<Chair>();
 
         // Start is called before the first frame update
         void Start()
         {
-            // Find all chairs at the start of the game
-            chairs.AddRange(GameObject.FindGameObjectsWithTag("Chair"));
+            // Find all chair objects at the start of the game and assign them to the chairs list
+            foreach (GameObject chairObject in GameObject.FindGameObjectsWithTag("Chair"))
+            {
+                Chair chair = chairObject.GetComponent<Chair>();
+                if (chair != null)
+                {
+                    chairs.Add(chair); // Add the chair component to the list
+                }
+            }
+
+            Debug.Log($"Number of chairs: {chairs.Count}");
 
             // Start spawning customers over time
             StartCoroutine(SpawnCustomersOverTime());
@@ -68,18 +76,20 @@ namespace Assets.Scripts.Characters
             if (customerQueue.Count > 0)
             {
                 // Move the served customer to a random unoccupied chair
-                GameObject selectedChair = FindUnoccupiedChair();
+                Chair selectedChair = FindUnoccupiedChair();
+                Debug.Log($"Selected chair: {selectedChair}");
                 if (selectedChair != null)
                 {
-                    // Mark the chair as occupied
-                    occupiedChairs.Add(selectedChair);
-
                     // Remove the customer from the front of the queue
                     Customer servedCustomer = customerQueue.Dequeue();
 
+                    // Mark the chair as occupied
+                    selectedChair.customer = servedCustomer;
+                    servedCustomer.occupiedChair = selectedChair;
+
                     // Move the customer to the selected chair using NavMesh
                     servedCustomer.isMovingToSeat = true;
-                    servedCustomer.MoveCustomerToPosition(selectedChair.transform.position);
+                    servedCustomer.MoveCustomerToPosition(selectedChair.chairPosition.position);
 
                     // Move all remaining customers forward in the queue
                     for (int i = 0; i < customerQueue.Count; i++)
@@ -96,14 +106,14 @@ namespace Assets.Scripts.Characters
         }
 
         // Method to find a random unoccupied chair
-        GameObject FindUnoccupiedChair()
+        Chair FindUnoccupiedChair()
         {
-            List<GameObject> availableChairs = new List<GameObject>();
+            List<Chair> availableChairs = new List<Chair>();
 
             // Filter out chairs that are already occupied
             foreach (var chair in chairs)
             {
-                if (!occupiedChairs.Contains(chair))
+                if (chair.customer == null)
                 {
                     availableChairs.Add(chair);
                 }
@@ -119,22 +129,16 @@ namespace Assets.Scripts.Characters
             return null;
         }
 
-        // Called when a customer has been served
-        public void OnCustomerServed(Customer customer)
-        {
-            Debug.Log($"{customer.characterName} has been served and is now sitting.");
-        }
-
         // Called when a customer leaves the diner
         public void OnCustomerLeft(Customer customer)
         {
             Debug.Log($"{customer.characterName} is leaving.");
 
             // Free up any occupied chairs if the customer was sitting
-            GameObject chair = FindOccupiedChairByCustomer(customer.gameObject);
-            if (chair != null)
+            if (customer.occupiedChair != null)
             {
-                occupiedChairs.Remove(chair);
+                customer.occupiedChair.customer = null;
+                customer.occupiedChair = null;
             }
             else if (customerQueue.Contains(customer))
             {
@@ -148,19 +152,6 @@ namespace Assets.Scripts.Characters
             }
         }
 
-        // Find the occupied chair for a specific customer
-        GameObject FindOccupiedChairByCustomer(GameObject customer)
-        {
-            foreach (var chair in occupiedChairs)
-            {
-                // Assuming the customer is directly sitting on the chair's position
-                if (Vector3.Distance(chair.transform.position, customer.transform.position) < 0.5f)
-                {
-                    return chair;
-                }
-            }
-            return null;
-        }
         // Coroutine to move the customer after a short delay
         IEnumerator MoveCustomerAfterInitialization(Customer customerScript)
         {
