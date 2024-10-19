@@ -680,6 +680,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 970409020485941968, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 963194227}
+    - target: {fileID: 970409020485941968, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
+      propertyPath: uiInteract
+      value: 
+      objectReference: {fileID: 1337114038}
     - target: {fileID: 3334446493063522565, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -721,48 +729,29 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4292436341908515642, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
-      propertyPath: m_UseGravity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4292436341908515642, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
       propertyPath: m_Constraints
       value: 116
-      objectReference: {fileID: 0}
-    - target: {fileID: 4292436341908515642, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
-      propertyPath: m_Interpolate
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4292436341908515642, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
       propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4292436341908515642, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 0
+    - target: {fileID: 5196804124300216534, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
+      propertyPath: dashDistance
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7704706028060301605, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
       propertyPath: m_Name
       value: Character
       objectReference: {fileID: 0}
     - target: {fileID: 7704706028060301605, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7704706028060301605, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
       propertyPath: m_TagString
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7781132454556029029, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7704706028060301605, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1681387498}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
 --- !u!1 &845576963
 GameObject:
@@ -1584,26 +1573,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2030922102}
   m_LocalEulerAnglesHint: {x: 172.449, y: -12.528015, z: -1.6730042}
---- !u!1 &1681387494 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7704706028060301605, guid: d537c8d694a684af298b0c7e8e9570ec, type: 3}
-  m_PrefabInstance: {fileID: 450346655}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1681387498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1681387494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3f22702e1167478aac478866493f253, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactRange: 2
-  uiInteract: {fileID: 1337114038}
-  mainCamera: {fileID: 963194227}
 --- !u!1 &1830757508
 GameObject:
   m_ObjectHideFlags: 0
