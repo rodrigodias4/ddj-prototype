@@ -14,6 +14,8 @@ namespace Assets.Scripts.Characters
         private float eatingTime = 3f;     // How long the customer takes to eat
         public Order customerOrder;        // Store the current order
 
+        private bool caught = false;
+
         // Reference to the speech bubble components
         private GameObject speechBubble;
         private TMP_Text speechBubbleText;
@@ -95,6 +97,10 @@ namespace Assets.Scripts.Characters
         // Update is called once per frame
         private void Update()
         {
+            if (caught) {
+                Debug.Log($"{characterName} has been caught!");
+                return;
+            }
             if (!isServed)
             {
                 waitTime += Time.deltaTime;
@@ -151,7 +157,7 @@ namespace Assets.Scripts.Characters
         }
 
         // Handle customer death/cleanup logic
-        protected override void Die()
+        public override void Die()
         {
             Debug.Log($"{characterName} is dying.");
 
@@ -159,6 +165,17 @@ namespace Assets.Scripts.Characters
 
             Destroy(gameObject);
         }
+
+        public void DisableCustomer(){
+            caught = true;
+            agent.isStopped = true;
+        }
+
+        public void EnableCustomer(){
+            caught = false;
+            agent.isStopped = false;
+        }
+
 
         // Use NavMeshAgent to move the customer to the target position
         public void MoveCustomerToPosition(Vector3 targetPosition)

@@ -37,7 +37,7 @@ namespace Assets.Scripts.Characters {
         }
 
         // NPCs may have unique death behavior
-        protected override void Die()
+        public override void Die()
         {
             base.Die();
             Debug.Log($"{characterName} was an NPC and has now disappeared.");

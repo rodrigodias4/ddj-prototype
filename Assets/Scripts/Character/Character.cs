@@ -33,7 +33,7 @@ namespace Assets.Scripts.Characters {
         }
 
         // Method to handle character death
-        protected virtual void Die()
+        public virtual void Die()
         {
             Debug.Log($"{characterName} has died.");
             // Add more functionality for when the character dies (like disabling the character)
