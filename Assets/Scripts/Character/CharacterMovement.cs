@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Events;
 
 public class CharacterMovement : MonoBehaviour
@@ -15,12 +16,16 @@ public class CharacterMovement : MonoBehaviour
 	public float dashDuration = 0.2f;
 	public float dashCooldown = 2f;
 	public float dashCooldownCur = 0f; // Added explicit for possible visual in UI
+	public CharacterInteract characterInteract;
 
 	// States
 	private State currentState;
 
 	void Start()
 	{
+		characterInteract = GetComponent<CharacterInteract>();
+		Assert.IsNotNull(characterInteract);
+		
 		// Set initial state
 		rb = GetComponent<Rigidbody>();
 		TransitionToState(new MoveState(this));
