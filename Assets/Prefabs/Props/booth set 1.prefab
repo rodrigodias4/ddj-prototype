@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1898838488908896909}
   - component: {fileID: 3311795126020216104}
   - component: {fileID: 725408668675138018}
+  - component: {fileID: 8794949470903302975}
   m_Layer: 0
   m_Name: chair_C (3)
-  m_TagString: Untagged
+  m_TagString: Chair
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,6 +84,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8794949470903302975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230000735952912439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cddf2300ddb20a7a42d240e8f5b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chairPosition: {fileID: 0}
+  customer: {fileID: 0}
 --- !u!1 &2123049226717307248
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,9 +248,10 @@ GameObject:
   - component: {fileID: 7865584691918922182}
   - component: {fileID: 6523446535951019619}
   - component: {fileID: 9035073275277613737}
+  - component: {fileID: 2753627023090210844}
   m_Layer: 0
   m_Name: chair_C (1)
-  m_TagString: Untagged
+  m_TagString: Chair
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -305,3 +321,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2753627023090210844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7378016824214141820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cddf2300ddb20a7a42d240e8f5b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chairPosition: {fileID: 0}
+  customer: {fileID: 0}
