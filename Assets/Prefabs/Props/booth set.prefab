@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7295189049481706454}
+  - component: {fileID: 2972583761179159316}
   m_Layer: 0
   m_Name: booth set
   m_TagString: Untagged
@@ -34,6 +35,27 @@ Transform:
   - {fileID: 8079995240205590485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2972583761179159316
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5193962641845543710}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.83, y: 2.12, z: 6.31}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1001 &467528357342368898
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -98,16 +120,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: chair_C (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
+      propertyPath: m_TagString
+      value: Chair
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1521245508498874032}
   m_SourcePrefab: {fileID: 100100000, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
 --- !u!4 &141379522135929705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
   m_PrefabInstance: {fileID: 467528357342368898}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &773941019524557267 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
+  m_PrefabInstance: {fileID: 467528357342368898}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1521245508498874032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773941019524557267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cddf2300ddb20a7a42d240e8f5b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chairPosition: {fileID: 0}
+  customer: {fileID: 0}
 --- !u!1001 &8479133808027376368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -172,16 +220,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: chair_C (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
+      propertyPath: m_TagString
+      value: Chair
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5114684508321837055}
   m_SourcePrefab: {fileID: 100100000, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
 --- !u!4 &8223949207447764251 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
   m_PrefabInstance: {fileID: 8479133808027376368}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8748953212481382305 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 583398f68a6602477bc6bc45580fb6be, type: 3}
+  m_PrefabInstance: {fileID: 8479133808027376368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5114684508321837055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8748953212481382305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cddf2300ddb20a7a42d240e8f5b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chairPosition: {fileID: 0}
+  customer: {fileID: 0}
 --- !u!1001 &8623075663495067710
 PrefabInstance:
   m_ObjectHideFlags: 0
