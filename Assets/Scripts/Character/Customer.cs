@@ -13,6 +13,7 @@ namespace Assets.Scripts.Characters
         private float waitTime = 0f;       // Internal tracking of how long the customer has waited
         private float eatingTime = 3f;     // How long the customer takes to eat
         private bool growingImpatient = false;
+        private float randomIdleRotationAngle;
         public Order customerOrder;        // Store the current order
 
         private bool caught = false;
@@ -46,6 +47,9 @@ namespace Assets.Scripts.Characters
 
             // Cache a reference to the main camera
             mainCamera = Camera.main;
+            
+            StartCoroutine(RotateRandomly());
+            transform.rotation = Quaternion.AngleAxis(randomIdleRotationAngle, Vector3.up);
         }
 
         // Show the speech bubble with the customer's order
@@ -139,6 +143,7 @@ namespace Assets.Scripts.Characters
         private void FixedUpdate()
         {
             if (growingImpatient) StartCoroutine(Tremble());
+            if (!seated) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(randomIdleRotationAngle, Vector3.up), Time.fixedDeltaTime * 2f);
         }
 
         // Customer leaves after being served or when impatient
@@ -206,6 +211,16 @@ namespace Assets.Scripts.Characters
             yield return new WaitForSeconds(0.01f);
             transform.position -= new Vector3(0, 0, 0.1f);
             yield return new WaitForSeconds(0.01f);
+        }
+
+        private IEnumerator RotateRandomly()
+        {
+            while (!seated) {
+                randomIdleRotationAngle = Random.Range(0f, 360f);
+                Debug.Log($"{name} : {randomIdleRotationAngle}");
+                
+                yield return new WaitForSeconds(Random.Range(2,5));
+            }
         }
     }
 }

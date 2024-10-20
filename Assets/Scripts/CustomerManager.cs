@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Scripts.Characters
 {
@@ -51,8 +52,7 @@ namespace Assets.Scripts.Characters
         {
             if (availableQueuePositions.Count > 0) // Only spawn if there's space in the queue
             {
-                int queueIndex = Random.Range(0, availableQueuePositions.Count);
-                Transform spawnPosition = availableQueuePositions[queueIndex];
+                Transform spawnPosition = availableQueuePositions.First();
 
                 // Instantiate the customer at the spawn position
                 GameObject newCustomer = Instantiate(customerPrefab, spawnPosition.position, Quaternion.identity);
@@ -62,7 +62,7 @@ namespace Assets.Scripts.Characters
                 customerScript.queuePosition = spawnPosition;
 
                 // Remove the queue position from the list
-                availableQueuePositions.RemoveAt(queueIndex);
+                availableQueuePositions.RemoveAt(0);
 
                 // Set properties (optional)
                 customerScript.characterName = "Customer " + customerCount++;
