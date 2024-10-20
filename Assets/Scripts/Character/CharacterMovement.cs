@@ -3,12 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 
 public class CharacterMovement : MonoBehaviour
 {
+	public UnityEvent onCharacterDashStart;
+	public UnityEvent onCharacterDashEnd;
+	
 	public Rigidbody rb;
 	public float movementSpeed = 10f;
-	public float dashDistance = 7.5f;
+	public float dashDistance = 5f;
 	public float dashDuration = 0.2f;
 	public float dashCooldown = 2f;
 	public float dashCooldownCur = 0f; // Added explicit for possible visual in UI
@@ -57,5 +61,10 @@ public class CharacterMovement : MonoBehaviour
 	private void DecrementCooldowns()
 	{
 		dashCooldownCur = Mathf.Clamp(dashCooldownCur - Time.deltaTime, 0f, dashCooldown);
+	}
+
+	public void CustomerHit()
+	{
+		currentState.CustomerHit();
 	}
 }
