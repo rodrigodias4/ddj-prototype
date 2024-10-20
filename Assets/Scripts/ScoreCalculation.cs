@@ -54,6 +54,7 @@ public class ScoreCalculation : MonoBehaviour
             Debug.Log("Score: " + score);
             highScoreText.gameObject.SetActive(true);
             panel.SetActive(true);
+            PauseGame();
         }
 
         if (score > highScore){
@@ -74,5 +75,12 @@ public class ScoreCalculation : MonoBehaviour
     public static void AddTips(int tipAmount)
     {
         tips += tipAmount;
+    }
+
+    // ik this should be in gamemanager but. 
+    // this is probably the only place where we'll need it. get silly
+    void PauseGame ()
+    {
+        Time.timeScale = 0;
     }
 }
