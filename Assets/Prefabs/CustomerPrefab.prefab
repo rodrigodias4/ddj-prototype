@@ -5021,10 +5021,14 @@ MonoBehaviour:
   dialogues: []
   patience: 17
   isServed: 0
+  waitTime: 0
   customerOrder: 0
-  burgerPrefab: {fileID: 919132149155446097, guid: 3a2a462baa85b4e8a8e85bc9d2111241, type: 3}
-  hamPrefab: {fileID: 919132149155446097, guid: afe1036a07f8e494696b9fa7a89b2c14, type: 3}
-  stewPrefab: {fileID: 919132149155446097, guid: 61493782b11a15642b3ddb9d7d017b13, type: 3}
+  burgerOrderPrefab: {fileID: 919132149155446097, guid: 3a2a462baa85b4e8a8e85bc9d2111241, type: 3}
+  hamOrderPrefab: {fileID: 919132149155446097, guid: afe1036a07f8e494696b9fa7a89b2c14, type: 3}
+  stewOrderPrefab: {fileID: 919132149155446097, guid: 61493782b11a15642b3ddb9d7d017b13, type: 3}
+  burgerPrefab: {fileID: 919132149155446097, guid: 051833a1833231a4385a4175af0c8b34, type: 3}
+  hamPrefab: {fileID: 919132149155446097, guid: cd0f705c7a10ed612868414ea253e216, type: 3}
+  stewPrefab: {fileID: 919132149155446097, guid: 3573e6511d91af518bb95a094e4a58c8, type: 3}
   deathParticlesPrefab: {fileID: 565430568931141421, guid: 06373cd3c024e3f4a9ace7ffa8bf67b3, type: 3}
   seated: 0
   occupiedChair: {fileID: 0}
@@ -5114,6 +5118,7 @@ MonoBehaviour:
   defaultMaterial: {fileID: 0}
   highlightMaterial: {fileID: 0}
   customer: {fileID: 0}
+  enableTooltip: 0
 --- !u!1 &5861098614466980489
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.AI;
 using System.Collections;
+using UnityEngine.Serialization;
 
 namespace Assets.Scripts.Characters
 {
@@ -16,9 +17,17 @@ namespace Assets.Scripts.Characters
         private float randomIdleRotationAngle;
         public Order customerOrder;        // Store the current order
 
+        
+        private GameObject orderVisual;
+        private GameObject foodVisual;
+        public GameObject burgerOrderPrefab;
+        public GameObject hamOrderPrefab;
+        public GameObject stewOrderPrefab;
+        
         public GameObject burgerPrefab;
         public GameObject hamPrefab;
         public GameObject stewPrefab;
+        
         [SerializeField] GameObject deathParticlesPrefab;
 
         private bool caught = false;
@@ -73,25 +82,7 @@ namespace Assets.Scripts.Characters
             if (speechBubble != null && speechBubbleText != null)
             {
                 speechBubble.SetActive(true);
-                // speechBubbleText.text = customerOrder.ToString();
-            }
-
-            GameObject orderPrefab = null;
-            if (customerOrder == Order.Burger)
-                orderPrefab = burgerPrefab;
-            else if (customerOrder == Order.Ham)
-                orderPrefab = hamPrefab;
-            else if (customerOrder == Order.Stew)
-                orderPrefab = stewPrefab;
-
-            if (orderPrefab is not null)
-            {
-                GameObject orderVisual;
-                orderVisual = Instantiate(orderPrefab, occupiedChair.tableTransform.position + new Vector3(0, 1.5f, 0),
-                    Quaternion.identity,
-                    speechBubble.transform);
-                orderVisual.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                orderVisual.transform.rotation = Quaternion.Euler(0, 0, 0);
+                // //speechBubbleText.text = customerOrder.ToString();
             }
         }
 
@@ -100,7 +91,7 @@ namespace Assets.Scripts.Characters
         {
             if (!seated){
                 Debug.Log($"{characterName} has not been seated yet.");
-                speechBubbleText.text = "I need to sit!!";
+                ////speechBubbleText.text = "I need to sit!!";
                 yield return StartCoroutine(DefaultMessage(1f));
             }
             else if (!isServed)
@@ -108,16 +99,16 @@ namespace Assets.Scripts.Characters
                 if (order != customerOrder)
                 {
                     Debug.Log($"{characterName} has been served the wrong order.");
-                    speechBubbleText.text = "WRONG!!";
+                    //speechBubbleText.text = "WRONG!!";
                     // StartCoroutine(DefaultMessage(1f));
                     yield return StartCoroutine(DefaultMessage(1f));
-                    speechBubbleText.text = customerOrder.ToString();
+                    //speechBubbleText.text = customerOrder.ToString();
                     ShowSpeechBubble();
                 }else{
                     interactableCustomer.enabled = false;
                     isServed = true;
                     Debug.Log($"{characterName} has been served {customerOrder}.");
-                    speechBubbleText.text = "Yummy!";
+                    //speechBubbleText.text = "Yummy!";
                     // Start the coroutine to wait before leaving
                     yield return StartCoroutine(EatFood(eatingTime)); 
                 }
@@ -174,7 +165,7 @@ namespace Assets.Scripts.Characters
             }
 
             if (caught) {
-                Debug.Log($"{characterName} has been caught!");
+                //Debug.Log($"{characterName} has been caught!");
                 growingImpatient = false;
                 return;
             }
@@ -200,6 +191,8 @@ namespace Assets.Scripts.Characters
             if (isServed)
             {
                 Debug.Log($"{characterName} has finished eating and wants to leave the diner.");
+                if (foodVisual is not null)
+                    Destroy(foodVisual.gameObject);
                 ScoreCalculation.IncrementDishCounter();
                 int tipAmount = (int) (patience - waitTime);
                 ScoreCalculation.IncrementTips(tipAmount);
@@ -226,7 +219,7 @@ namespace Assets.Scripts.Characters
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
             growingImpatient = false;
             interactableCustomer.enableTooltip = true;
-            ShowSpeechBubble();  // Show the speech bubble when seated
+            CreateOrderVisual();
         }
 
         // Handle customer death/cleanup logic
@@ -252,6 +245,8 @@ namespace Assets.Scripts.Characters
 
         private IEnumerator EatFood(float eatingTime)
         {
+            CreateFoodVisual();
+            
             // Wait for the specified amount of time (in seconds)
             yield return new WaitForSeconds(eatingTime);
 
@@ -266,7 +261,7 @@ namespace Assets.Scripts.Characters
             yield return new WaitForSeconds(time);
 
             // Call the Leave method after the wait
-            // speechBubbleText.text = customerOrder.ToString();
+            // //speechBubbleText.text = customerOrder.ToString();
             HideSpeechBubble();
 
         }
@@ -303,6 +298,47 @@ namespace Assets.Scripts.Characters
             yield return new WaitForSeconds(10f);
             
             Destroy(particles);
+        }
+
+        private void CreateOrderVisual()
+        {
+            GameObject orderPrefab = null;
+            if (customerOrder == Order.Burger)
+                orderPrefab = burgerOrderPrefab;
+            else if (customerOrder == Order.Ham)
+                orderPrefab = hamOrderPrefab;
+            else if (customerOrder == Order.Stew)
+                orderPrefab = stewOrderPrefab;
+
+            if (orderPrefab is not null)
+            {
+                orderVisual = Instantiate(orderPrefab, occupiedChair.tableTransform.position + new Vector3(0, 1.5f, 0),
+                    Quaternion.identity,
+                    occupiedChair.transform);
+                orderVisual.transform.rotation = Quaternion.Euler(0, customerOrder == Order.Ham ? 180 : 0, 0);
+            }
+        }
+
+        private void CreateFoodVisual()
+        {
+            if (orderVisual is not null)
+                Destroy(orderVisual.gameObject);
+            
+            GameObject orderPrefab = null;
+            if (customerOrder == Order.Burger)
+                orderPrefab = burgerPrefab;
+            else if (customerOrder == Order.Ham)
+                orderPrefab = hamPrefab;
+            else if (customerOrder == Order.Stew)
+                orderPrefab = stewPrefab;
+
+            if (orderPrefab is not null)
+            {
+                foodVisual = Instantiate(orderPrefab, occupiedChair.tableTransform.position + new Vector3(0, 1.5f, 0),
+                    Quaternion.identity,
+                    occupiedChair.transform);
+                foodVisual.transform.rotation = Quaternion.Euler(0, customerOrder == Order.Ham ? 180 : 0, 0);
+            }
         }
     }
 }
