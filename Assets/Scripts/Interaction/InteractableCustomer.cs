@@ -4,9 +4,11 @@ using UnityEngine;
 public class InteractableCustomer : InteractableItem
 {
     public Customer customer;
+    public bool enableTooltip;
 
     public override void Start()
     {
+        enableTooltip = false;
     }
     
     public override string GetTooltip()

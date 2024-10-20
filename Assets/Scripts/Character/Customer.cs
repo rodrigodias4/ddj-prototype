@@ -85,9 +85,14 @@ namespace Assets.Scripts.Characters
                 orderPrefab = stewPrefab;
 
             if (orderPrefab is not null)
-                Instantiate(orderPrefab, occupiedChair.tableTransform.position + new Vector3(0, 1.5f, 0),
+            {
+                GameObject orderVisual;
+                orderVisual = Instantiate(orderPrefab, occupiedChair.tableTransform.position + new Vector3(0, 1.5f, 0),
                     Quaternion.identity,
                     speechBubble.transform);
+                orderVisual.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                orderVisual.transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
         }
 
         // Serve the customer
@@ -136,7 +141,7 @@ namespace Assets.Scripts.Characters
         private void Update()
         {
 
-            if (!isServed)
+            if (!isServed && !caught)
             {
                 waitTime += Time.deltaTime;
 
@@ -215,10 +220,12 @@ namespace Assets.Scripts.Characters
             patience *= 2;  // Double the patience when seated
             occupiedChair = chair;
             customerManager.availableChairs.Remove(chair);
+            StartCoroutine(customerManager.AddAvailableQueuePosition(queuePosition));
             seated = true;
             rb.isKinematic = true;  // Disable physics when seated
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
             growingImpatient = false;
+            interactableCustomer.enableTooltip = true;
             ShowSpeechBubble();  // Show the speech bubble when seated
         }
 

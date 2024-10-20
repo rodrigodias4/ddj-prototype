@@ -85,11 +85,15 @@ namespace Assets.Scripts.Characters
                 customer.occupiedChair.customer = null;
                 customer.occupiedChair = null;
             }
+        }
 
-            // Add the customer's original queue position back to the available queue positions
-            if (customer.queuePosition != null && !availableQueuePositions.Contains(customer.queuePosition))
+        public IEnumerator AddAvailableQueuePosition(Transform queuePosition)
+        {
+            yield return new WaitForSeconds(timeBetweenSpawns);
+            
+            if (queuePosition != null && !availableQueuePositions.Contains(queuePosition))
             {
-                availableQueuePositions.Add(customer.queuePosition);
+                availableQueuePositions.Add(queuePosition);
             }
         }
     }
