@@ -1,8 +1,9 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.Characters;
 using UnityEngine;
 using UnityEngine.UI;
+// using Assets.Scripts.Character.Customer;
+
 public class SpecialState : State
 {
 
@@ -173,11 +174,13 @@ public class SpecialState : State
 
         if (hitObject != null) // if hit
         {
+            Customer c = hitObject.GetComponent<Customer>();
+            c.DisableCustomer();
             Rigidbody rb = hitObject.GetComponent<Rigidbody>();
             if ( slider.value > 0.5){
                 Debug.Log(slider.value + "Killed");
                 // Kill code comes here 
-                hitObject.SetActive(false);
+                c.Die();
                 yield return character.StartCoroutine(AnimateTentacle(hitObject.transform.position));
             }else if (slider.value <= 0.5 && slider.value > 0.3){
                 Debug.Log(slider.value + "Grappled");
@@ -197,11 +200,13 @@ public class SpecialState : State
                     }
                     yield return null;  // Wait for the next frame
                 }
+                c.EnableCustomer();
             }else{
                 Debug.Log(slider.value + "Vaguely Nudged");
                 // Nudge code comes here 
                 Vector3 nudgeDirection = (hitObject.transform.position - character.transform.position).normalized;
                 rb.AddForce(nudgeDirection * 5f, ForceMode.Impulse);  // Adjust force as needed
+                c.EnableCustomer();
                 yield return character.StartCoroutine(AnimateTentacle(hitObject.transform.position));
             }
         }else{
