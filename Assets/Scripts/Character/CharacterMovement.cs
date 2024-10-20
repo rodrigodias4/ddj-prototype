@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -21,6 +22,8 @@ public class CharacterMovement : MonoBehaviour
 	public GameObject currentFood;
 	// States
 	private State currentState;
+	public enum Order { Burger, Ham, Stew, None };
+	public Order order = Order.None;
 
 	void Start()
 	{
@@ -71,8 +74,9 @@ public class CharacterMovement : MonoBehaviour
 	{
 		currentState.CustomerHit();
 	}
-	public void ReplaceHeldFood(GameObject newFoodPrefab)
+	public void ReplaceHeldFood(GameObject newFoodPrefab, Order order)
     {
+		this.order = order;
         // If there is already food, remove it
         if (currentFood != null)
         {
@@ -86,4 +90,13 @@ public class CharacterMovement : MonoBehaviour
         currentFood.transform.localPosition = Vector3.zero;
         currentFood.transform.localRotation = Quaternion.identity;
     }
+
+	public void RemoveHeldFood()
+	{
+		this.order = Order.None;
+		if (currentFood != null)
+		{
+			Destroy(currentFood);
+		}
+	}
 }

@@ -8,7 +8,7 @@ public class InteractableItem : MonoBehaviour, IInteractable
 {
 	[SerializeField] private Material defaultMaterial = null;
 	[SerializeField] private Material highlightMaterial = null;
-	private bool inInteractRange = false;
+	protected bool inInteractRange = false;
 	new Renderer renderer = null;
 
 	public virtual void Start()
@@ -29,7 +29,7 @@ public class InteractableItem : MonoBehaviour, IInteractable
 		if (inInteractRange == false) inInteractRange = true;
 	}
 
-	public void LateUpdate()
+	public virtual void LateUpdate()
 	{
 		// TODO: Setting material for all interactables in every frame might be very costly
 		renderer.material = inInteractRange ? highlightMaterial : defaultMaterial;

@@ -81,11 +81,10 @@ public class SpecialState : State
         sliderCanvas.transform.rotation = originalCanvasRotation; // does not rotate canvas
         Vector3 forward = character.transform.TransformDirection(Vector3.forward) * 100;
         Debug.DrawRay(character.transform.position, forward, Color.green);
-
-        // if (grappling){
-            movementInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            // return;
-        // }
+        movementInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        if (grappling){
+            return;
+        }
 
         VisualizePower();
         CalculatePlayerFacing();
@@ -186,7 +185,7 @@ public class SpecialState : State
                 yield return character.StartCoroutine(AnimateTentacle(hitObject.transform.position));
             }else if (slider.value <= 0.5 && slider.value > 0.25){
                 Debug.Log(slider.value + "Grappled");
-                while (Vector3.Distance(hitObject.transform.position, character.transform.position) > 1f 
+                while (Vector3.Distance(hitObject.transform.position, character.transform.position) > 1.5f 
                         && !c.seated)
                 {
                     // Move the object toward the player over time
