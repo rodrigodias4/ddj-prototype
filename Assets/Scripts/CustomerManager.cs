@@ -8,29 +8,29 @@ namespace Assets.Scripts.Characters
     {
         public static CustomerManager Instance; // Singleton instance
         public GameObject customerPrefab;      // Prefab of the customer
-        public Transform spawnPoint;           // Fixed spawn location
         public List<Transform> queuePositions; // List of queue positions (back to front)
+        private List<Transform> availableQueuePositions = new(); // List of available queue positions
+        public Transform exitPoint;            // Exit point for customers
         public float timeBetweenSpawns = 15f;   // Time delay between each customer spawn
         private int customerCount = 1;
-        private Queue<Customer> customerQueue = new Queue<Customer>(); // Tracks customers in the queue
-
         // List of all chairs
-        private List<Chair> chairs = new List<Chair>();
+        public List<Chair> availableChairs = new List<Chair>();
 
         // Start is called before the first frame update
         void Start()
         {
+            availableQueuePositions.AddRange(queuePositions);
             // Find all chair objects at the start of the game and assign them to the chairs list
             foreach (GameObject chairObject in GameObject.FindGameObjectsWithTag("Chair"))
             {
                 Chair chair = chairObject.GetComponent<Chair>();
                 if (chair != null)
                 {
-                    chairs.Add(chair); // Add the chair component to the list
+                    availableChairs.Add(chair); // Add the chair component to the list
                 }
             }
 
-            Debug.Log($"Number of chairs: {chairs.Count}");
+            Debug.Log($"Number of chairs: {availableChairs.Count}");
 
             // Start spawning customers over time
             StartCoroutine(SpawnCustomersOverTime());
@@ -49,14 +49,20 @@ namespace Assets.Scripts.Characters
         // Method to spawn a customer
         void SpawnCustomer()
         {
-            if (customerQueue.Count < queuePositions.Count) // Only spawn if there's space in the queue
+            if (availableQueuePositions.Count > 0) // Only spawn if there's space in the queue
             {
-                // Instantiate the customer at the spawn point
-                GameObject newCustomer = Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
+                int queueIndex = Random.Range(0, availableQueuePositions.Count);
+                Transform spawnPosition = availableQueuePositions[queueIndex];
+
+                // Instantiate the customer at the spawn position
+                GameObject newCustomer = Instantiate(customerPrefab, spawnPosition.position, Quaternion.identity);
                 Customer customerScript = newCustomer.GetComponent<Customer>();
 
-                // Move the customer to the back of the queue using NavMesh
-                StartCoroutine(MoveCustomerAfterInitialization(customerScript));
+                // Store the original queue position in the customer's script
+                customerScript.queuePosition = spawnPosition;
+
+                // Remove the queue position from the list
+                availableQueuePositions.RemoveAt(queueIndex);
 
                 // Set properties (optional)
                 customerScript.characterName = "Customer " + customerCount++;
@@ -67,66 +73,6 @@ namespace Assets.Scripts.Characters
             }
         }
 
-        // Call this when a customer leaves the queue
-        public void Sit()
-        {
-            Debug.Log($"Customer is going to sit. Queue count: {customerQueue.Count}");
-            if (customerQueue.Count > 0)
-            {
-                // Move the served customer to a random unoccupied chair
-                Chair selectedChair = FindUnoccupiedChair();
-                if (selectedChair != null)
-                {
-                    // Remove the customer from the front of the queue
-                    Customer servedCustomer = customerQueue.Dequeue();
-                    Debug.Log($"Sitting {servedCustomer.characterName}");
-
-                    // Mark the chair as occupied
-                    selectedChair.customer = servedCustomer;
-                    servedCustomer.occupiedChair = selectedChair;
-
-                    // Move the customer to the selected chair using NavMesh
-                    servedCustomer.isMovingToSeat = true;
-                    servedCustomer.MoveCustomerToPosition(selectedChair.chairPosition.position);
-
-                    // Move all remaining customers forward in the queue
-                    for (int i = 0; i < customerQueue.Count; i++)
-                    {
-                        Customer remainingCustomer = customerQueue.ToArray()[i];
-                        remainingCustomer.MoveCustomerToPosition(queuePositions[i].position);
-                    }
-                }
-                else
-                {
-                    Debug.Log("No unoccupied chairs available!");
-                }
-            }
-        }
-
-        // Method to find a random unoccupied chair
-        Chair FindUnoccupiedChair()
-        {
-            List<Chair> availableChairs = new List<Chair>();
-
-            // Filter out chairs that are already occupied
-            foreach (var chair in chairs)
-            {
-                if (chair.customer == null)
-                {
-                    availableChairs.Add(chair);
-                }
-            }
-
-            // If we have available chairs, select one at random
-            if (availableChairs.Count > 0)
-            {
-                int randomIndex = Random.Range(0, availableChairs.Count);
-                return availableChairs[randomIndex];
-            }
-
-            return null;
-        }
-
         // Called when a customer leaves the diner
         public void OnCustomerLeft(Customer customer)
         {
@@ -135,59 +81,16 @@ namespace Assets.Scripts.Characters
             // Free up any occupied chairs if the customer was sitting
             if (customer.occupiedChair != null)
             {
+                availableChairs.Add(customer.occupiedChair);
                 customer.occupiedChair.customer = null;
                 customer.occupiedChair = null;
             }
-            else if (customerQueue.Contains(customer))
+
+            // Add the customer's original queue position back to the available queue positions
+            if (customer.queuePosition != null && !availableQueuePositions.Contains(customer.queuePosition))
             {
-                DequeueSpecificCustomer(customer);
-                // Move all remaining customers forward in the queue
-                for (int i = 0; i < customerQueue.Count; i++)
-                {
-                    Customer remainingCustomer = customerQueue.ToArray()[i];
-                    remainingCustomer.MoveCustomerToPosition(queuePositions[i].position);
-                }
+                availableQueuePositions.Add(customer.queuePosition);
             }
         }
-
-        // Coroutine to move the customer after a short delay
-        IEnumerator MoveCustomerAfterInitialization(Customer customerScript)
-        {
-            // Wait a frame for the NavMeshAgent to initialize
-            yield return null;
-
-            // Add the customer to the queue
-            customerQueue.Enqueue(customerScript);
-            
-            // Move the customer to the back of the queue using NavMesh
-            customerScript.MoveCustomerToPosition(queuePositions[customerQueue.Count - 1].position);
-
-        }
-
-        public void DequeueSpecificCustomer(Customer targetCustomer)
-        {
-            Queue<Customer> newQueue = new Queue<Customer>();
-
-            // Iterate through the existing queue
-            while (customerQueue.Count > 0)
-            {
-                // Dequeue each customer
-                Customer customer = customerQueue.Dequeue();
-
-                // If it's not the customer we want to remove, enqueue it to the new queue
-                if (customer != targetCustomer)
-                {
-                    newQueue.Enqueue(customer);
-                }
-                else
-                {
-                    Debug.Log($"Removed {customer.characterName} from the queue.");
-                }
-            }
-
-            // Replace the old queue with the new one
-            customerQueue = newQueue;
-        }
-
     }
 }

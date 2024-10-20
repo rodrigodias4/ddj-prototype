@@ -8,13 +8,14 @@ namespace Timer
     public class Timer : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI timerText;
+        [SerializeField] float levelTime = 180f;
         public float timeremaining { get; set; }
 
         // Update is called once per frame
 
         void Start()
         {
-            timeremaining = 90;
+            timeremaining = levelTime;
         }
         void Update()
         {

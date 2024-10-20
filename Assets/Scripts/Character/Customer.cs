@@ -19,39 +19,39 @@ namespace Assets.Scripts.Characters
         // Reference to the speech bubble components
         private GameObject speechBubble;
         private TMP_Text speechBubbleText;
-        private UnityEngine.AI.NavMeshAgent agent; // Reference to the NavMeshAgent component
         private Camera mainCamera; // Reference to the main camera
         private CustomerManager customerManager;  // Cached reference to the CustomerManager
-        private Vector3 initialPosition;          // Initial position of the customer
-        public bool isMovingToSeat = false;
+        public bool seated = false;
         private bool isLeaving = false; 
         public Chair occupiedChair; // Reference to the chair the customer is sitting on
+        private Rigidbody rb;
+        public Transform queuePosition;
+
+        private InteractableCustomer interactableCustomer;
 
         protected override void Start()
         {
             base.Start();
 
-            initialPosition = transform.position;
+            rb = GetComponent<Rigidbody>();
 
             customerManager = FindObjectOfType<CustomerManager>();
             // Select a random order for the customer
             customerOrder = (Order)Random.Range(0, System.Enum.GetValues(typeof(Order)).Length);
+
+            // Get the InteractableCustomer component
+            interactableCustomer = GetComponent<InteractableCustomer>();
+            if (interactableCustomer != null)
+            {
+                interactableCustomer.enabled = false;
+                interactableCustomer.customer = this;
+            }
 
             Debug.Log($"{characterName} entered the diner and is waiting to place an order. Random Order: {customerOrder}");
 
             // Find the speech bubble GameObject and text component
             speechBubble = transform.Find("SpeechBubble").gameObject;
             speechBubbleText = speechBubble.GetComponentInChildren<TMP_Text>();
-
-            // Add a NavMeshAgent to the customer if it doesn't already exist
-            agent = gameObject.GetComponent<NavMeshAgent>();
-            if (agent == null)
-            {
-                agent = gameObject.AddComponent<NavMeshAgent>();
-            }
-            
-            // Set the agent's speed (optional if set in the prefab)
-            agent.speed = speed;
 
             // Cache a reference to the main camera
             mainCamera = Camera.main;
@@ -63,21 +63,36 @@ namespace Assets.Scripts.Characters
             if (speechBubble != null && speechBubbleText != null)
             {
                 speechBubble.SetActive(true);
-                speechBubbleText.text = customerOrder.ToString();
+                // speechBubbleText.text = customerOrder.ToString();
             }
         }
 
         // Serve the customer
-        public void Serve()
+        public IEnumerator Serve(Order order)
         {
-            if (!isServed)
+            if (!seated){
+                Debug.Log($"{characterName} has not been seated yet.");
+                speechBubbleText.text = "I need to sit!!";
+                yield return StartCoroutine(DefaultMessage(1f));
+            }
+            else if (!isServed)
             {
-                isServed = true;
-                Debug.Log($"{characterName} has been served {customerOrder}.");
-                HideSpeechBubble();
-                // Start the coroutine to wait before leaving
-                StartCoroutine(EatFood(eatingTime)); 
-
+                if (order != customerOrder)
+                {
+                    Debug.Log($"{characterName} has been served the wrong order.");
+                    speechBubbleText.text = "WRONG!!";
+                    // StartCoroutine(DefaultMessage(1f));
+                    yield return StartCoroutine(DefaultMessage(1f));
+                    speechBubbleText.text = customerOrder.ToString();
+                    ShowSpeechBubble();
+                }else{
+                    interactableCustomer.enabled = false;
+                    isServed = true;
+                    Debug.Log($"{characterName} has been served {customerOrder}.");
+                    speechBubbleText.text = "Yummy!";
+                    // Start the coroutine to wait before leaving
+                    yield return StartCoroutine(EatFood(eatingTime)); 
+                }
             }
             else
             {
@@ -97,10 +112,7 @@ namespace Assets.Scripts.Characters
         // Update is called once per frame
         private void Update()
         {
-            if (caught) {
-                Debug.Log($"{characterName} has been caught!");
-                return;
-            }
+
             if (!isServed)
             {
                 waitTime += Time.deltaTime;
@@ -109,22 +121,25 @@ namespace Assets.Scripts.Characters
                     Leave();  // Customer leaves after losing patience
                 }
             }
-            // Check if customer is moving to a seat and has reached the destination
-            if (isMovingToSeat && agent != null && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+
+            // Check if customer is seated
+            if (!seated)
             {
-                isMovingToSeat = false;  // Stop checking once the seat is reached
-                ShowSpeechBubble();  // Show the speech bubble when seated
-            }
-            
-            // Check if customer is leaving and has reached the initial position
-            if (isLeaving && agent != null && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
-            {
-                isLeaving = false;  // Customer has finished leaving
-                Debug.Log($"{characterName} has left the diner.");
-                // Destroy the customer GameObject
-                Destroy(gameObject);
+                foreach (Chair chair in customerManager.availableChairs)
+                {
+                    if (Vector3.Distance(transform.position, chair.chairPosition.position) < 2f)
+                    {
+                        Sit(chair);
+                        break;
+                    }
+                }
             }
 
+            if (caught) {
+                Debug.Log($"{characterName} has been caught!");
+                return;
+            }
+            
             // Make sure the speech bubble is always facing the camera
             if (speechBubble != null && mainCamera != null)
             {
@@ -139,25 +154,29 @@ namespace Assets.Scripts.Characters
         {
             if (isServed)
             {
-                Debug.Log($"{characterName} has finished eating and left the diner.");
-                ScoreCalculation.IncrementDishCounter();
-                //convert to int the (patience - wait time float value)
-                int tips = (int)(patience - waitTime);
-                ScoreCalculation.IncrementTips(tips);
+                Debug.Log($"{characterName} has finished eating and wants to leave the diner.");
             }
             else
             {
-                Debug.Log($"{characterName} got impatient and left the diner without being served.");
+                Debug.Log($"{characterName} got impatient and wants to leave the diner without being served.");
             }
-
-            isLeaving = true;  // Set the leaving flag to true
-            
-            HideSpeechBubble();
-
-            MoveCustomerToPosition(initialPosition);
-
+            Destroy(gameObject);  // Destroy the customer object
             // Notify CustomerManager that the customer has left
             customerManager?.OnCustomerLeft(this);
+        }
+
+        public void Sit(Chair chair)
+        {
+            interactableCustomer.enabled = true;
+            transform.position = chair.chairPosition.position + new Vector3(0, 1f, 0);
+            patience *= 2;  // Double the patience when seated
+            occupiedChair = chair;
+            customerManager.availableChairs.Remove(chair);
+            seated = true;
+            rb.isKinematic = true;  // Disable physics when seated
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            speechBubbleText.text = customerOrder.ToString();
+            ShowSpeechBubble();  // Show the speech bubble when seated
         }
 
         // Handle customer death/cleanup logic
@@ -166,32 +185,18 @@ namespace Assets.Scripts.Characters
             Debug.Log($"{characterName} is dying.");
 
             customerManager?.OnCustomerLeft(this);
-            ScoreCalculation.IncrementCustomerKilled();
 
             Destroy(gameObject);
         }
 
         public void DisableCustomer(){
             caught = true;
-            agent.enabled = false;
         }
 
         public void EnableCustomer(){
             caught = false;
-            agent.enabled = true;
         }
 
-
-        // Use NavMeshAgent to move the customer to the target position
-        public void MoveCustomerToPosition(Vector3 targetPosition)
-        {
-            Debug.Log($"{characterName} is moving to position: {targetPosition}");
-            if (agent != null && agent.isOnNavMesh)
-            {
-                // Set the destination for the NavMeshAgent
-                agent.SetDestination(targetPosition);
-            }
-        }
         private IEnumerator EatFood(float eatingTime)
         {
             // Wait for the specified amount of time (in seconds)
@@ -199,6 +204,18 @@ namespace Assets.Scripts.Characters
 
             // Call the Leave method after the wait
             Leave();
+        }
+
+        private IEnumerator DefaultMessage(float time)
+        {
+            ShowSpeechBubble(); 
+            // Wait for the specified amount of time (in seconds)
+            yield return new WaitForSeconds(time);
+
+            // Call the Leave method after the wait
+            // speechBubbleText.text = customerOrder.ToString();
+            HideSpeechBubble();
+
         }
     }
 }
