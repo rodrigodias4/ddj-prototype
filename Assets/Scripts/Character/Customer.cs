@@ -64,7 +64,7 @@ namespace Assets.Scripts.Characters
             {
                 isServed = true;
                 Debug.Log($"{characterName} has been served {customerOrder}.");
-                HideSpeechBubble();
+                speechBubbleText.text = "Yummy!";
                 // Start the coroutine to wait before leaving
                 StartCoroutine(EatFood(eatingTime)); 
 
