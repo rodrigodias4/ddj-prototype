@@ -31,6 +31,7 @@ public class SpecialState : State
     public Vector3 movementInput;
 	private Matrix4x4 isometricMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 45, 0));
     private GameObject arrow;
+    private LayerMask targetMask = LayerMask.GetMask("TargetLayer");
 
 
     public override void Enter()
@@ -81,10 +82,10 @@ public class SpecialState : State
         Vector3 forward = character.transform.TransformDirection(Vector3.forward) * 100;
         Debug.DrawRay(character.transform.position, forward, Color.green);
 
-        if (grappling){
+        // if (grappling){
             movementInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            return;
-        }
+            // return;
+        // }
 
         VisualizePower();
         CalculatePlayerFacing();
@@ -163,7 +164,8 @@ public class SpecialState : State
         Vector3 characterPos = character.transform.position;
         characterPos.y += 1;
         GameObject hitObject = null;
-        if (Physics.Raycast(characterPos, character.transform.forward, out hit, maxDistance)  
+        Debug.DrawRay(character.transform.position, character.transform.forward, Color.magenta);
+        if (Physics.Raycast(characterPos, character.transform.forward, out hit, maxDistance,targetMask)  
             && hit.collider.CompareTag("Customer"))
         {
             hitObject = hit.collider.gameObject;
@@ -182,13 +184,14 @@ public class SpecialState : State
                 // Kill code comes here 
                 c.Die();
                 yield return character.StartCoroutine(AnimateTentacle(hitObject.transform.position));
-            }else if (slider.value <= 0.5 && slider.value > 0.3){
+            }else if (slider.value <= 0.5 && slider.value > 0.25){
                 Debug.Log(slider.value + "Grappled");
-                while (Vector3.Distance(hitObject.transform.position, character.transform.position) > 1f)
+                while (Vector3.Distance(hitObject.transform.position, character.transform.position) > 1f 
+                        && !c.seated)
                 {
                     // Move the object toward the player over time
                     Vector3 direction = (character.transform.position - hitObject.transform.position).normalized;
-                    rb.MovePosition(hitObject.transform.position + direction * Time.deltaTime * 20f);  // Adjust speed as needed
+                    rb.MovePosition(hitObject.transform.position + direction * Time.deltaTime * 15f);  // Adjust speed as needed
                     if (lineRenderer.enabled && grappleTarget != null)
                     {
                         Vector3 pos = character.transform.position;
@@ -198,6 +201,7 @@ public class SpecialState : State
                         lineRenderer.SetPosition(0, pos);  // Start point at the player
                         lineRenderer.SetPosition(1, grapplepos);        // End point at the target object
                     }
+
                     yield return null;  // Wait for the next frame
                 }
                 c.EnableCustomer();

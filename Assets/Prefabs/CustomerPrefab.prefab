@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1069106109119759445}
   - component: {fileID: 3404489050356427005}
   - component: {fileID: 6271318754154737590}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: -3702206364382019019}
   - component: {fileID: 8649458328285866060}
   - component: {fileID: 9086295705871871607}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CustomerPrefab
   m_TagString: Customer
   m_Icon: {fileID: 0}
@@ -274,7 +274,7 @@ GameObject:
   - component: {fileID: 3617366539090803717}
   - component: {fileID: 5126453057852258666}
   - component: {fileID: 3988179266878426387}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -350,7 +350,7 @@ GameObject:
   - component: {fileID: 5071878301557048147}
   - component: {fileID: 4419278624902739778}
   - component: {fileID: 7605901698828376693}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SpeechBubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -489,21 +489,49 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5869326866883201024, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: -3618863749430104963, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: -2867747967464863736, guid: b5cd4811009c5dab098dcdb40e91a7db, type: 3}
+    - target: {fileID: -3618863749430104963, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: -2867747967464863736, guid: 104e8c58dc722471683fd916b7dd201a, type: 3}
+    - target: {fileID: 511933774332526699, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_Name
       value: character_mage
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4980478767815145630, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: -9134830746832118513, guid: 0acf1e977b943db8dbeb9e99c24454bc, type: 3}
     - target: {fileID: 6056470135106541503, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6056470135106541503, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257725893408180793, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7392195885917465935, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

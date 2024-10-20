@@ -87,10 +87,7 @@ namespace Assets.Scripts.Characters
         // Update is called once per frame
         private void Update()
         {
-            if (caught) {
-                Debug.Log($"{characterName} has been caught!");
-                return;
-            }
+
             if (!isServed)
             {
                 waitTime += Time.deltaTime;
@@ -113,6 +110,11 @@ namespace Assets.Scripts.Characters
                 }
             }
 
+            if (caught) {
+                Debug.Log($"{characterName} has been caught!");
+                return;
+            }
+            
             // Make sure the speech bubble is always facing the camera
             if (speechBubble != null && mainCamera != null)
             {
@@ -146,6 +148,7 @@ namespace Assets.Scripts.Characters
             customerManager.availableChairs.Remove(chair);
             seated = true;
             rb.isKinematic = true;  // Disable physics when seated
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
             ShowSpeechBubble();  // Show the speech bubble when seated
         }
 
