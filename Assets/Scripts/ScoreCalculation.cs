@@ -15,7 +15,6 @@ public class ScoreCalculation : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI finalScoreText;
     public TextMeshProUGUI highScoreText;
-    public RawImage gameOverImage;
 
     public static int highScore = 0;
 
@@ -30,17 +29,20 @@ public class ScoreCalculation : MonoBehaviour
         customerKilled = 0;
         tips = 0;
         highScore = PlayerPrefs.GetInt("HighScore", 0);
+        Debug.Log("Score: " + score);
+        scoreText.gameObject.SetActive(true);
         finalScoreText.gameObject.SetActive(false);
         highScoreText.gameObject.SetActive(false);
-        gameOverImage.gameObject.SetActive(false);
     }
 
     void Update()
     {
+
+        score = dishCounter * 50 - customerKilled * 100 + tips;
+        scoreText.text = "Score: " + score;
         // If the game is over, the score is calculated
         if (timer.timeremaining <= 0)
         {
-            score = dishCounter * 50 - customerKilled * 100 + tips;
             scoreText.text = "Score: " + score + "\nHigh Score: " + highScore;
             scoreText.gameObject.SetActive(false);
             finalScoreText.text = "Score: " + score;
@@ -48,8 +50,8 @@ public class ScoreCalculation : MonoBehaviour
             finalScoreText.color = Color.yellow;
             highScoreText.color = Color.yellow;
             finalScoreText.gameObject.SetActive(true);
+            Debug.Log("Score: " + score);
             highScoreText.gameObject.SetActive(true);
-            gameOverImage.gameObject.SetActive(true);
         }
 
         if (score > highScore){

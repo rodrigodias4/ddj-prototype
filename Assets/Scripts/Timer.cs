@@ -14,7 +14,7 @@ namespace Timer
 
         void Start()
         {
-            timeremaining = 72;
+            timeremaining = 10;
         }
         void Update()
         {
