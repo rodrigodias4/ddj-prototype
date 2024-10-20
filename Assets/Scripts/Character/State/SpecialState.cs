@@ -81,11 +81,10 @@ public class SpecialState : State
         sliderCanvas.transform.rotation = originalCanvasRotation; // does not rotate canvas
         Vector3 forward = character.transform.TransformDirection(Vector3.forward) * 100;
         Debug.DrawRay(character.transform.position, forward, Color.green);
-
-        // if (grappling){
-            movementInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            // return;
-        // }
+        movementInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        if (grappling){
+            return;
+        }
 
         VisualizePower();
         CalculatePlayerFacing();
