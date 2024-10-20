@@ -8,10 +8,11 @@ namespace Assets.Scripts.Characters
     public class Customer : NPC
     {
         public enum Order { Burger, Ham, Stew };
-        public float patience = 60f;       // How long the customer will wait before leaving
+        public float patience = 10f;       // How long the customer will wait before leaving
         public bool isServed = false;      // Whether the customer has been served
         private float waitTime = 0f;       // Internal tracking of how long the customer has waited
         private float eatingTime = 3f;     // How long the customer takes to eat
+        private bool growingImpatient = false;
         public Order customerOrder;        // Store the current order
 
         private bool caught = false;
@@ -91,6 +92,16 @@ namespace Assets.Scripts.Characters
             if (!isServed)
             {
                 waitTime += Time.deltaTime;
+
+                if (waitTime >= patience * 0.75 && !isLeaving)
+                {
+                    if (growingImpatient == false)
+                    {
+                        Debug.Log($"{characterName} is losing patience.");
+                        growingImpatient = true;
+                    }
+                }
+                
                 if (waitTime >= patience && !isLeaving)
                 {
                     Leave();  // Customer leaves after losing patience
@@ -112,6 +123,7 @@ namespace Assets.Scripts.Characters
 
             if (caught) {
                 Debug.Log($"{characterName} has been caught!");
+                growingImpatient = false;
                 return;
             }
             
@@ -122,6 +134,11 @@ namespace Assets.Scripts.Characters
                 speechBubble.transform.LookAt(speechBubble.transform.position + mainCamera.transform.rotation * Vector3.forward,
                     mainCamera.transform.rotation * Vector3.up);
             }
+        }
+
+        private void FixedUpdate()
+        {
+            if (growingImpatient) StartCoroutine(Tremble());
         }
 
         // Customer leaves after being served or when impatient
@@ -149,6 +166,7 @@ namespace Assets.Scripts.Characters
             seated = true;
             rb.isKinematic = true;  // Disable physics when seated
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            growingImpatient = false;
             ShowSpeechBubble();  // Show the speech bubble when seated
         }
 
@@ -177,6 +195,17 @@ namespace Assets.Scripts.Characters
 
             // Call the Leave method after the wait
             Leave();
+        }
+        
+        private IEnumerator Tremble() {
+            transform.position += new Vector3(0.1f, 0, 0);
+            yield return new WaitForSeconds(0.01f);
+            transform.position -= new Vector3(0.1f, 0, 0);
+            yield return new WaitForSeconds(0.01f);
+            transform.position += new Vector3(0, 0, 0.1f);
+            yield return new WaitForSeconds(0.01f);
+            transform.position -= new Vector3(0, 0, 0.1f);
+            yield return new WaitForSeconds(0.01f);
         }
     }
 }
