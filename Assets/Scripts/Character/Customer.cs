@@ -63,30 +63,36 @@ namespace Assets.Scripts.Characters
             if (speechBubble != null && speechBubbleText != null)
             {
                 speechBubble.SetActive(true);
-                speechBubbleText.text = customerOrder.ToString();
+                // speechBubbleText.text = customerOrder.ToString();
             }
         }
 
         // Serve the customer
-        public void Serve(Order order)
+        public IEnumerator Serve(Order order)
         {
-            if (!isServed)
+            if (!seated){
+                Debug.Log($"{characterName} has not been seated yet.");
+                speechBubbleText.text = "I need to sit!!";
+                yield return StartCoroutine(DefaultMessage(1f));
+            }
+            else if (!isServed)
             {
                 if (order != customerOrder)
                 {
                     Debug.Log($"{characterName} has been served the wrong order.");
-                    speechBubbleText.text = "Me No Likey!";
-                    StartCoroutine(DefaultMessage(1f));
-                    return;
+                    speechBubbleText.text = "WRONG!!";
+                    // StartCoroutine(DefaultMessage(1f));
+                    yield return StartCoroutine(DefaultMessage(1f));
+                    speechBubbleText.text = customerOrder.ToString();
+                    ShowSpeechBubble();
+                }else{
+                    interactableCustomer.enabled = false;
+                    isServed = true;
+                    Debug.Log($"{characterName} has been served {customerOrder}.");
+                    speechBubbleText.text = "Yummy!";
+                    // Start the coroutine to wait before leaving
+                    yield return StartCoroutine(EatFood(eatingTime)); 
                 }
-
-                interactableCustomer.enabled = false;
-                isServed = true;
-                Debug.Log($"{characterName} has been served {customerOrder}.");
-                speechBubbleText.text = "Yummy!";
-                // Start the coroutine to wait before leaving
-                StartCoroutine(EatFood(eatingTime)); 
-
             }
             else
             {
@@ -169,6 +175,7 @@ namespace Assets.Scripts.Characters
             seated = true;
             rb.isKinematic = true;  // Disable physics when seated
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            speechBubbleText.text = customerOrder.ToString();
             ShowSpeechBubble();  // Show the speech bubble when seated
         }
 
@@ -201,11 +208,14 @@ namespace Assets.Scripts.Characters
 
         private IEnumerator DefaultMessage(float time)
         {
+            ShowSpeechBubble(); 
             // Wait for the specified amount of time (in seconds)
             yield return new WaitForSeconds(time);
 
             // Call the Leave method after the wait
-            speechBubbleText.text = customerOrder.ToString();
+            // speechBubbleText.text = customerOrder.ToString();
+            HideSpeechBubble();
+
         }
     }
 }

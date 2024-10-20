@@ -25,7 +25,7 @@ public class InteractableCustomer : InteractableItem
     {
         base.Interact(character);
         
-        customer.Serve((Customer.Order)character.order);
+        customer.StartCoroutine(customer.Serve((Customer.Order)character.order));
 
         character.RemoveHeldFood();
     }
