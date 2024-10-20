@@ -36,7 +36,7 @@ public class Food : InteractableItem
         if (foodPrefab != null)
         {
             // Replace the currently held food with the new food prefab
-            character.ReplaceHeldFood(foodPrefab);
+            character.ReplaceHeldFood(foodPrefab, (CharacterMovement.Order)order);
         }
         else
         {

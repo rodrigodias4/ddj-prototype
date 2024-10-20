@@ -27,6 +27,8 @@ namespace Assets.Scripts.Characters
         private Rigidbody rb;
         public Transform queuePosition;
 
+        private InteractableCustomer interactableCustomer;
+
         protected override void Start()
         {
             base.Start();
@@ -36,6 +38,14 @@ namespace Assets.Scripts.Characters
             customerManager = FindObjectOfType<CustomerManager>();
             // Select a random order for the customer
             customerOrder = (Order)Random.Range(0, System.Enum.GetValues(typeof(Order)).Length);
+
+            // Get the InteractableCustomer component
+            interactableCustomer = GetComponent<InteractableCustomer>();
+            if (interactableCustomer != null)
+            {
+                interactableCustomer.enabled = false;
+                interactableCustomer.customer = this;
+            }
 
             Debug.Log($"{characterName} entered the diner and is waiting to place an order. Random Order: {customerOrder}");
 
@@ -58,10 +68,19 @@ namespace Assets.Scripts.Characters
         }
 
         // Serve the customer
-        public void Serve()
+        public void Serve(Order order)
         {
             if (!isServed)
             {
+                if (order != customerOrder)
+                {
+                    Debug.Log($"{characterName} has been served the wrong order.");
+                    speechBubbleText.text = "Me No Likey!";
+                    StartCoroutine(DefaultMessage(1f));
+                    return;
+                }
+
+                interactableCustomer.enabled = false;
                 isServed = true;
                 Debug.Log($"{characterName} has been served {customerOrder}.");
                 speechBubbleText.text = "Yummy!";
@@ -142,6 +161,7 @@ namespace Assets.Scripts.Characters
 
         public void Sit(Chair chair)
         {
+            interactableCustomer.enabled = true;
             transform.position = chair.chairPosition.position + new Vector3(0, 1f, 0);
             patience *= 2;  // Double the patience when seated
             occupiedChair = chair;
@@ -177,6 +197,15 @@ namespace Assets.Scripts.Characters
 
             // Call the Leave method after the wait
             Leave();
+        }
+
+        private IEnumerator DefaultMessage(float time)
+        {
+            // Wait for the specified amount of time (in seconds)
+            yield return new WaitForSeconds(time);
+
+            // Call the Leave method after the wait
+            speechBubbleText.text = customerOrder.ToString();
         }
     }
 }
