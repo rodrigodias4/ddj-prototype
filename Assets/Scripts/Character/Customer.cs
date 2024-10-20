@@ -141,6 +141,7 @@ namespace Assets.Scripts.Characters
         public void Sit(Chair chair)
         {
             transform.position = chair.chairPosition.position + new Vector3(0, 1f, 0);
+            patience *= 2;  // Double the patience when seated
             occupiedChair = chair;
             customerManager.availableChairs.Remove(chair);
             seated = true;
