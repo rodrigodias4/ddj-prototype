@@ -12,7 +12,7 @@ public class CharacterMovement : MonoBehaviour
 	
 	public Rigidbody rb;
 	public float movementSpeed = 10f;
-	public float dashDistance = 5f;
+	public float dashDistance = 7.5f;
 	public float dashDuration = 0.2f;
 	public float dashCooldown = 2f;
 	public float dashCooldownCur = 0f; // Added explicit for possible visual in UI
