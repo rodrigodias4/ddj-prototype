@@ -262,7 +262,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!114 &70995731129113500
 MonoBehaviour:
@@ -278,8 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultMaterial: {fileID: 0}
   highlightMaterial: {fileID: 0}
-  order: 0
-  foodPrefab: {fileID: 0}
+  customer: {fileID: 0}
 --- !u!1 &5861098614466980489
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,19 +479,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.00000008146034
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -500,7 +499,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6bdc8236152f2556ebe3fdbebffc18c5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
