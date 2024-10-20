@@ -15,9 +15,7 @@ public class ScoreCalculation : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI finalScoreText;
     public TextMeshProUGUI highScoreText;
-
-
-
+    public GameObject panel;
     public static int highScore = 0;
 
     public Timer.Timer timer;
@@ -35,6 +33,7 @@ public class ScoreCalculation : MonoBehaviour
         scoreText.gameObject.SetActive(true);
         finalScoreText.gameObject.SetActive(false);
         highScoreText.gameObject.SetActive(false);
+        panel.SetActive(false);
     }
 
     void Update()
@@ -54,6 +53,8 @@ public class ScoreCalculation : MonoBehaviour
             finalScoreText.gameObject.SetActive(true);
             Debug.Log("Score: " + score);
             highScoreText.gameObject.SetActive(true);
+            panel.SetActive(true);
+            PauseGame();
         }
 
         if (score > highScore){
@@ -71,8 +72,15 @@ public class ScoreCalculation : MonoBehaviour
         customerKilled++;
     }
 
-    public static void IncrementTips(int tipAmount)
+    public static void AddTips(int tipAmount)
     {
         tips += tipAmount;
+    }
+
+    // ik this should be in gamemanager but. 
+    // this is probably the only place where we'll need it. get silly
+    void PauseGame ()
+    {
+        Time.timeScale = 0;
     }
 }
