@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class DashState : State
 {
-	private float speedbonus = 2f;
 	public DashState(CharacterMovement character) : base(character)
 	{
 	}
@@ -13,7 +12,8 @@ public class DashState : State
 	public override void Enter()
 	{
 		Debug.Log("Entering Dash State");
-		character.rb.velocity = speedbonus * character.transform.forward * (character.dashDistance / character.dashDuration);
+		character.onCharacterDashStart.Invoke();
+		character.rb.velocity = character.transform.forward * (character.dashDistance / character.dashDuration);
 		character.StartCoroutine(EndDash());
 	}
 
@@ -28,6 +28,7 @@ public class DashState : State
 	public override void Exit()
 	{
 		Debug.Log("Exiting Dash State");
+		character.onCharacterDashEnd.Invoke();
 		character.rb.velocity = Vector3.zero;
 		character.dashCooldownCur = character.dashCooldown;
 	}
@@ -36,5 +37,10 @@ public class DashState : State
 	{
 		yield return new WaitForSeconds(character.dashDuration);
 		character.TransitionToState(new MoveState(character));
+	}
+
+	public override void CustomerHit()
+	{
+		Debug.Log("Player hit customer with dash");
 	}
 }

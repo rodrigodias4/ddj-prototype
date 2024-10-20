@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Chair
   - Customer
+  - Table
   layers:
   - Default
   - TransparentFX
