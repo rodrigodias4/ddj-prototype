@@ -155,6 +155,9 @@ namespace Assets.Scripts.Characters
             if (isServed)
             {
                 Debug.Log($"{characterName} has finished eating and wants to leave the diner.");
+                ScoreCalculation.IncrementDishCounter();
+                int tipAmount = (int) (patience - waitTime);
+                ScoreCalculation.IncrementTips(tipAmount);
             }
             else
             {
@@ -185,6 +188,7 @@ namespace Assets.Scripts.Characters
             Debug.Log($"{characterName} is dying.");
 
             customerManager?.OnCustomerLeft(this);
+            ScoreCalculation.IncrementCustomerKilled();
 
             Destroy(gameObject);
         }
