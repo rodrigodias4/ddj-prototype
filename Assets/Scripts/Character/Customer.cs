@@ -27,6 +27,8 @@ namespace Assets.Scripts.Characters
         private Rigidbody rb;
         public Transform queuePosition;
 
+        private InteractableCustomer interactableCustomer;
+
         protected override void Start()
         {
             base.Start();
@@ -36,6 +38,14 @@ namespace Assets.Scripts.Characters
             customerManager = FindObjectOfType<CustomerManager>();
             // Select a random order for the customer
             customerOrder = (Order)Random.Range(0, System.Enum.GetValues(typeof(Order)).Length);
+
+            // Get the InteractableCustomer component
+            interactableCustomer = GetComponent<InteractableCustomer>();
+            if (interactableCustomer != null)
+            {
+                interactableCustomer.enabled = false;
+                interactableCustomer.customer = this;
+            }
 
             Debug.Log($"{characterName} entered the diner and is waiting to place an order. Random Order: {customerOrder}");
 
@@ -53,21 +63,36 @@ namespace Assets.Scripts.Characters
             if (speechBubble != null && speechBubbleText != null)
             {
                 speechBubble.SetActive(true);
-                speechBubbleText.text = customerOrder.ToString();
+                // speechBubbleText.text = customerOrder.ToString();
             }
         }
 
         // Serve the customer
-        public void Serve()
+        public IEnumerator Serve(Order order)
         {
-            if (!isServed)
+            if (!seated){
+                Debug.Log($"{characterName} has not been seated yet.");
+                speechBubbleText.text = "I need to sit!!";
+                yield return StartCoroutine(DefaultMessage(1f));
+            }
+            else if (!isServed)
             {
-                isServed = true;
-                Debug.Log($"{characterName} has been served {customerOrder}.");
-                speechBubbleText.text = "Yummy!";
-                // Start the coroutine to wait before leaving
-                StartCoroutine(EatFood(eatingTime)); 
-
+                if (order != customerOrder)
+                {
+                    Debug.Log($"{characterName} has been served the wrong order.");
+                    speechBubbleText.text = "WRONG!!";
+                    // StartCoroutine(DefaultMessage(1f));
+                    yield return StartCoroutine(DefaultMessage(1f));
+                    speechBubbleText.text = customerOrder.ToString();
+                    ShowSpeechBubble();
+                }else{
+                    interactableCustomer.enabled = false;
+                    isServed = true;
+                    Debug.Log($"{characterName} has been served {customerOrder}.");
+                    speechBubbleText.text = "Yummy!";
+                    // Start the coroutine to wait before leaving
+                    yield return StartCoroutine(EatFood(eatingTime)); 
+                }
             }
             else
             {
@@ -142,6 +167,7 @@ namespace Assets.Scripts.Characters
 
         public void Sit(Chair chair)
         {
+            interactableCustomer.enabled = true;
             transform.position = chair.chairPosition.position + new Vector3(0, 1f, 0);
             patience *= 2;  // Double the patience when seated
             occupiedChair = chair;
@@ -149,6 +175,7 @@ namespace Assets.Scripts.Characters
             seated = true;
             rb.isKinematic = true;  // Disable physics when seated
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            speechBubbleText.text = customerOrder.ToString();
             ShowSpeechBubble();  // Show the speech bubble when seated
         }
 
@@ -177,6 +204,18 @@ namespace Assets.Scripts.Characters
 
             // Call the Leave method after the wait
             Leave();
+        }
+
+        private IEnumerator DefaultMessage(float time)
+        {
+            ShowSpeechBubble(); 
+            // Wait for the specified amount of time (in seconds)
+            yield return new WaitForSeconds(time);
+
+            // Call the Leave method after the wait
+            // speechBubbleText.text = customerOrder.ToString();
+            HideSpeechBubble();
+
         }
     }
 }
