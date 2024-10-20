@@ -74,7 +74,10 @@ namespace Assets.Scripts.Characters
             else if (customerOrder == Order.Stew)
                 orderPrefab = stewPrefab;
 
-            if (orderPrefab is not null) Instantiate(orderPrefab, speechBubble.transform.position - Vector3.up, Quaternion.identity, speechBubble.transform);
+            if (orderPrefab is not null)
+                Instantiate(orderPrefab, occupiedChair.tableTransform.position + new Vector3(0, 1.5f, 0),
+                    Quaternion.identity,
+                    speechBubble.transform);
         }
 
         // Serve the customer
@@ -147,12 +150,12 @@ namespace Assets.Scripts.Characters
             }
             
             // Make sure the speech bubble is always facing the camera
-            if (speechBubble != null && mainCamera != null)
+            /*if (speechBubble != null && mainCamera != null)
             {
                 // Make the speech bubble look at the camera
                 speechBubble.transform.LookAt(speechBubble.transform.position + mainCamera.transform.rotation * Vector3.forward,
                     mainCamera.transform.rotation * Vector3.up);
-            }
+            }*/
         }
 
         private void FixedUpdate()
