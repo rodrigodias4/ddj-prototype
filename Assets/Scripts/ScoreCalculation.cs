@@ -72,7 +72,7 @@ public class ScoreCalculation : MonoBehaviour
         customerKilled++;
     }
 
-    public static void AddTips(int tipAmount)
+    public static void IncrementTips(int tipAmount)
     {
         tips += tipAmount;
     }

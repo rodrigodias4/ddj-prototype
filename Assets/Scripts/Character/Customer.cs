@@ -2,14 +2,13 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.AI;
 using System.Collections;
-using UnityEngine.Serialization;
 
 namespace Assets.Scripts.Characters
 {
     public class Customer : NPC
     {
         public enum Order { Burger, Ham, Stew };
-        public float patience = 10f;       // How long the customer will wait before leaving
+        public float patience = 20f;       // How long the customer will wait before leaving
         public bool isServed = false;      // Whether the customer has been served
         private float waitTime = 0f;       // Internal tracking of how long the customer has waited
         private float eatingTime = 3f;     // How long the customer takes to eat
@@ -35,6 +34,8 @@ namespace Assets.Scripts.Characters
         private Rigidbody rb;
         public Transform queuePosition;
 
+        private InteractableCustomer interactableCustomer;
+
         protected override void Start()
         {
             base.Start();
@@ -45,12 +46,19 @@ namespace Assets.Scripts.Characters
             // Select a random order for the customer
             customerOrder = (Order)Random.Range(0, System.Enum.GetValues(typeof(Order)).Length);
 
+            // Get the InteractableCustomer component
+            interactableCustomer = GetComponent<InteractableCustomer>();
+            if (interactableCustomer != null)
+            {
+                interactableCustomer.enabled = false;
+                interactableCustomer.customer = this;
+            }
+
             Debug.Log($"{characterName} entered the diner and is waiting to place an order. Random Order: {customerOrder}");
 
             // Find the speech bubble GameObject and text component
             speechBubble = transform.Find("SpeechBubble").gameObject;
             speechBubbleText = speechBubble.GetComponentInChildren<TMP_Text>();
-            
 
             // Cache a reference to the main camera
             mainCamera = Camera.main;
@@ -65,7 +73,7 @@ namespace Assets.Scripts.Characters
             if (speechBubble != null && speechBubbleText != null)
             {
                 speechBubble.SetActive(true);
-                speechBubbleText.text = customerOrder.ToString();
+                // speechBubbleText.text = customerOrder.ToString();
             }
 
             GameObject orderPrefab = null;
@@ -83,16 +91,31 @@ namespace Assets.Scripts.Characters
         }
 
         // Serve the customer
-        public void Serve()
+        public IEnumerator Serve(Order order)
         {
-            if (!isServed)
+            if (!seated){
+                Debug.Log($"{characterName} has not been seated yet.");
+                speechBubbleText.text = "I need to sit!!";
+                yield return StartCoroutine(DefaultMessage(1f));
+            }
+            else if (!isServed)
             {
-                isServed = true;
-                Debug.Log($"{characterName} has been served {customerOrder}.");
-                speechBubbleText.text = "Yummy!";
-                // Start the coroutine to wait before leaving
-                StartCoroutine(EatFood(eatingTime)); 
-
+                if (order != customerOrder)
+                {
+                    Debug.Log($"{characterName} has been served the wrong order.");
+                    speechBubbleText.text = "WRONG!!";
+                    // StartCoroutine(DefaultMessage(1f));
+                    yield return StartCoroutine(DefaultMessage(1f));
+                    speechBubbleText.text = customerOrder.ToString();
+                    ShowSpeechBubble();
+                }else{
+                    interactableCustomer.enabled = false;
+                    isServed = true;
+                    Debug.Log($"{characterName} has been served {customerOrder}.");
+                    speechBubbleText.text = "Yummy!";
+                    // Start the coroutine to wait before leaving
+                    yield return StartCoroutine(EatFood(eatingTime)); 
+                }
             }
             else
             {
@@ -172,6 +195,9 @@ namespace Assets.Scripts.Characters
             if (isServed)
             {
                 Debug.Log($"{characterName} has finished eating and wants to leave the diner.");
+                ScoreCalculation.IncrementDishCounter();
+                int tipAmount = (int) (patience - waitTime);
+                ScoreCalculation.IncrementTips(tipAmount);
             }
             else
             {
@@ -184,6 +210,7 @@ namespace Assets.Scripts.Characters
 
         public void Sit(Chair chair)
         {
+            interactableCustomer.enabled = true;
             transform.position = chair.chairPosition.position + new Vector3(0, 1f, 0);
             patience *= 2;  // Double the patience when seated
             occupiedChair = chair;
@@ -200,9 +227,9 @@ namespace Assets.Scripts.Characters
         {
             Debug.Log($"{characterName} is dying.");
 
-            
             customerManager?.OnCustomerLeft(this);
-            
+            ScoreCalculation.IncrementCustomerKilled();
+
             Destroy(gameObject);
             
             StartCoroutine(DeathParticles());
@@ -223,6 +250,18 @@ namespace Assets.Scripts.Characters
 
             // Call the Leave method after the wait
             Leave();
+        }
+
+        private IEnumerator DefaultMessage(float time)
+        {
+            ShowSpeechBubble(); 
+            // Wait for the specified amount of time (in seconds)
+            yield return new WaitForSeconds(time);
+
+            // Call the Leave method after the wait
+            // speechBubbleText.text = customerOrder.ToString();
+            HideSpeechBubble();
+
         }
         
         private IEnumerator Tremble() {
