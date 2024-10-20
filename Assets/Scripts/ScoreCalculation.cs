@@ -16,6 +16,8 @@ public class ScoreCalculation : MonoBehaviour
     public TextMeshProUGUI finalScoreText;
     public TextMeshProUGUI highScoreText;
 
+
+
     public static int highScore = 0;
 
     public Timer.Timer timer;
@@ -69,7 +71,7 @@ public class ScoreCalculation : MonoBehaviour
         customerKilled++;
     }
 
-    public static void AddTips(int tipAmount)
+    public static void IncrementTips(int tipAmount)
     {
         tips += tipAmount;
     }
