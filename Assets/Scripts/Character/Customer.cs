@@ -16,6 +16,10 @@ namespace Assets.Scripts.Characters
         private float randomIdleRotationAngle;
         public Order customerOrder;        // Store the current order
 
+        public GameObject burgerPrefab;
+        public GameObject hamPrefab;
+        public GameObject stewPrefab;
+
         private bool caught = false;
 
         // Reference to the speech bubble components
@@ -44,6 +48,7 @@ namespace Assets.Scripts.Characters
             // Find the speech bubble GameObject and text component
             speechBubble = transform.Find("SpeechBubble").gameObject;
             speechBubbleText = speechBubble.GetComponentInChildren<TMP_Text>();
+            
 
             // Cache a reference to the main camera
             mainCamera = Camera.main;
@@ -60,6 +65,16 @@ namespace Assets.Scripts.Characters
                 speechBubble.SetActive(true);
                 speechBubbleText.text = customerOrder.ToString();
             }
+
+            GameObject orderPrefab = null;
+            if (customerOrder == Order.Burger)
+                orderPrefab = burgerPrefab;
+            else if (customerOrder == Order.Ham)
+                orderPrefab = hamPrefab;
+            else if (customerOrder == Order.Stew)
+                orderPrefab = stewPrefab;
+
+            if (orderPrefab is not null) Instantiate(orderPrefab, speechBubble.transform.position - Vector3.up, Quaternion.identity, speechBubble.transform);
         }
 
         // Serve the customer
