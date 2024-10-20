@@ -112,15 +112,6 @@ namespace Assets.Scripts.Characters
                     }
                 }
             }
-            
-            // Check if customer is leaving and has reached the initial position
-            if (isLeaving && Vector3.Distance(transform.position, customerManager.exitPoint.position) < 2f)
-            {
-                isLeaving = false;  // Customer has finished leaving
-                Debug.Log($"{characterName} has left the diner.");
-                // Destroy the customer GameObject
-                Destroy(gameObject);
-            }
 
             // Make sure the speech bubble is always facing the camera
             if (speechBubble != null && mainCamera != null)
@@ -142,11 +133,7 @@ namespace Assets.Scripts.Characters
             {
                 Debug.Log($"{characterName} got impatient and wants to leave the diner without being served.");
             }
-            isLeaving = true;  // Set the leaving flag to true
-            seated = true; // Set seated to true to prevent re-seating
-            HideSpeechBubble();
-            rb.isKinematic = false;  // Enable physics when leaving
-
+            Destroy(gameObject);  // Destroy the customer object
             // Notify CustomerManager that the customer has left
             customerManager?.OnCustomerLeft(this);
         }
