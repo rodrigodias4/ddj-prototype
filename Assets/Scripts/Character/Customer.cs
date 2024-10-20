@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.AI;
 using System.Collections;
+using UnityEngine.Serialization;
 
 namespace Assets.Scripts.Characters
 {
@@ -19,6 +20,7 @@ namespace Assets.Scripts.Characters
         public GameObject burgerPrefab;
         public GameObject hamPrefab;
         public GameObject stewPrefab;
+        [SerializeField] GameObject deathParticlesPrefab;
 
         private bool caught = false;
 
@@ -198,9 +200,12 @@ namespace Assets.Scripts.Characters
         {
             Debug.Log($"{characterName} is dying.");
 
+            
             customerManager?.OnCustomerLeft(this);
-
+            
             Destroy(gameObject);
+            
+            StartCoroutine(DeathParticles());
         }
 
         public void DisableCustomer(){
@@ -235,10 +240,23 @@ namespace Assets.Scripts.Characters
         {
             while (!seated) {
                 randomIdleRotationAngle = Random.Range(0f, 360f);
-                Debug.Log($"{name} : {randomIdleRotationAngle}");
                 
                 yield return new WaitForSeconds(Random.Range(2,5));
             }
+        }
+
+        private IEnumerator DeathParticles()
+        {
+            GameObject particles = Instantiate(deathParticlesPrefab, transform.position + Vector3.up, Quaternion.identity);
+            
+            foreach (ParticleSystem particle in particles.GetComponentsInChildren<ParticleSystem>())
+            {
+                particle.Play();
+            }
+
+            yield return new WaitForSeconds(10f);
+            
+            Destroy(particles);
         }
     }
 }
