@@ -15,7 +15,7 @@ public class ScoreCalculation : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI finalScoreText;
     public TextMeshProUGUI highScoreText;
-
+    public GameObject panel;
     public static int highScore = 0;
 
     public Timer.Timer timer;
@@ -33,6 +33,7 @@ public class ScoreCalculation : MonoBehaviour
         scoreText.gameObject.SetActive(true);
         finalScoreText.gameObject.SetActive(false);
         highScoreText.gameObject.SetActive(false);
+        panel.SetActive(false);
     }
 
     void Update()
@@ -52,6 +53,7 @@ public class ScoreCalculation : MonoBehaviour
             finalScoreText.gameObject.SetActive(true);
             Debug.Log("Score: " + score);
             highScoreText.gameObject.SetActive(true);
+            panel.SetActive(true);
         }
 
         if (score > highScore){
