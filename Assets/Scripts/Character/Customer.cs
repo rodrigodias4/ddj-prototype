@@ -10,7 +10,7 @@ namespace Assets.Scripts.Characters
         public enum Order { Burger, Ham, Stew };
         public float patience = 20f;       // How long the customer will wait before leaving
         public bool isServed = false;      // Whether the customer has been served
-        private float waitTime = 0f;       // Internal tracking of how long the customer has waited
+        [SerializeField] private float waitTime = 0f;       // Internal tracking of how long the customer has waited
         private float eatingTime = 3f;     // How long the customer takes to eat
         private bool growingImpatient = false;
         private float randomIdleRotationAngle;
@@ -141,7 +141,7 @@ namespace Assets.Scripts.Characters
         private void Update()
         {
 
-            if (!isServed && !caught)
+            if (!isServed && (seated || !caught))
             {
                 waitTime += Time.deltaTime;
 
