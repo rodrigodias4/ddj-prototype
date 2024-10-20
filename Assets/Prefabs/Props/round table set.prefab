@@ -129,6 +129,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3367600232432842026}
       addedObject: {fileID: 4493415946164537923}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 47cbe270ccc28898e8de75a6a3867eda, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4612673344088471848}
   m_SourcePrefab: {fileID: 100100000, guid: 47cbe270ccc28898e8de75a6a3867eda, type: 3}
 --- !u!4 &4024823960777508224 stripped
 Transform:
@@ -172,6 +175,20 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: -0.00000008940697, y: 0.37, z: 0}
+--- !u!114 &4612673344088471848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4364230747443142458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cddf2300ddb20a7a42d240e8f5b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chairPosition: {fileID: 0}
+  customer: {fileID: 0}
 --- !u!1001 &6327874590299000179
 PrefabInstance:
   m_ObjectHideFlags: 0
