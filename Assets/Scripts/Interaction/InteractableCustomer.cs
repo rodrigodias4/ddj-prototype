@@ -12,8 +12,7 @@ public class InteractableCustomer : InteractableItem
     }
 
     public override void LateUpdate()
-	{	
-		inInteractRange = false;
+	{
 	}
 
 

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 709149056189234498}
   - component: {fileID: 5556504755351287410}
   m_Layer: 5
-  m_Name: ScoreText (1)
+  m_Name: ScoreSubText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -696,7 +696,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 4614609103901787570}
-  levelTime: 90
+  levelTime: 120
 --- !u!1 &3092360118344396718
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,6 +1216,14 @@ PrefabInstance:
       propertyPath: scoreText
       value: 
       objectReference: {fileID: 1674656375881270772}
+    - target: {fileID: 2984698929965229813, guid: 02e328b5f24a61047bcac4170d3f991a, type: 3}
+      propertyPath: timerText
+      value: 
+      objectReference: {fileID: 4614609103901787570}
+    - target: {fileID: 2984698929965229813, guid: 02e328b5f24a61047bcac4170d3f991a, type: 3}
+      propertyPath: scoreSubText
+      value: 
+      objectReference: {fileID: 5556504755351287410}
     - target: {fileID: 2984698929965229813, guid: 02e328b5f24a61047bcac4170d3f991a, type: 3}
       propertyPath: highScoreText
       value: 

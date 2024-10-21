@@ -14,9 +14,6 @@ public class InteractableItem : MonoBehaviour, IInteractable
 	public virtual void Start()
 	{
 		renderer = GetComponent<Renderer>();
-		Assert.IsNotNull(defaultMaterial);
-		Assert.IsNotNull(highlightMaterial);
-		Assert.IsNotNull(renderer);
 	}
 
 	public virtual void Interact(CharacterMovement character)

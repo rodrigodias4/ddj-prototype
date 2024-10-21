@@ -560,8 +560,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1747a611c1f6c917faa73e225930a608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMaterial: {fileID: -1724080987372072942, guid: cd0f705c7a10ed612868414ea253e216, type: 3}
-  highlightMaterial: {fileID: -1724080987372072942, guid: cd0f705c7a10ed612868414ea253e216, type: 3}
+  defaultMaterial: {fileID: 2100000, guid: 9b32dad1cb62e9749b6853e35779a832, type: 2}
+  highlightMaterial: {fileID: 2100000, guid: 6b896b56e495c4d55bca3579ab8ef970, type: 2}
   order: 1
   foodPrefab: {fileID: 919132149155446097, guid: cd0f705c7a10ed612868414ea253e216, type: 3}
 --- !u!65 &2363541348398387180
@@ -686,8 +686,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1747a611c1f6c917faa73e225930a608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMaterial: {fileID: -1724080987372072942, guid: 3573e6511d91af518bb95a094e4a58c8, type: 3}
-  highlightMaterial: {fileID: -1724080987372072942, guid: 3573e6511d91af518bb95a094e4a58c8, type: 3}
+  defaultMaterial: {fileID: 2100000, guid: 9b32dad1cb62e9749b6853e35779a832, type: 2}
+  highlightMaterial: {fileID: 2100000, guid: 6b896b56e495c4d55bca3579ab8ef970, type: 2}
   order: 2
   foodPrefab: {fileID: 919132149155446097, guid: 3573e6511d91af518bb95a094e4a58c8, type: 3}
 --- !u!65 &2867206001573930076
@@ -1772,8 +1772,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1747a611c1f6c917faa73e225930a608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMaterial: {fileID: -1724080987372072942, guid: 051833a1833231a4385a4175af0c8b34, type: 3}
-  highlightMaterial: {fileID: -1724080987372072942, guid: 051833a1833231a4385a4175af0c8b34, type: 3}
+  defaultMaterial: {fileID: 2100000, guid: 9b32dad1cb62e9749b6853e35779a832, type: 2}
+  highlightMaterial: {fileID: 2100000, guid: 6b896b56e495c4d55bca3579ab8ef970, type: 2}
   order: 0
   foodPrefab: {fileID: 919132149155446097, guid: 051833a1833231a4385a4175af0c8b34, type: 3}
 --- !u!65 &2023140290919318585

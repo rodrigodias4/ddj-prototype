@@ -24,7 +24,6 @@ public class CharacterInteract : MonoBehaviour
     void Update()
     {
         Collider[] interactColliders = Physics.OverlapSphere(transform.position, interactRange);
-        Collider closestInteractCollider = null;
         closestInteractable = null;
         float closestDistance = Mathf.Infinity;
         foreach (Collider interactCollider in interactColliders)

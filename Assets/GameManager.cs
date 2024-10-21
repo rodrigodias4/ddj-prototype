@@ -13,8 +13,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float pauseOverlayAlpha = 0.9f;
     private bool gamePaused = false;
 
+    public bool gameOver;
+    public int highScore;
+
     void Start()
     {
+        gameOver = false;
         Application.targetFrameRate = 60;
 
         pauseOverlayAlpha = Mathf.Clamp(pauseOverlayAlpha, 0, 1);
