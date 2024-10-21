@@ -350,15 +350,12 @@ namespace Assets.Scripts.Characters
         {
             yield return new WaitForSeconds(3f);
 
-            while (!caught && !isServed)
+            while (true)
             {
-                waitingTMP.text = ".";
-                yield return new WaitForSeconds(1f);
-                waitingTMP.text = "..";
-                yield return new WaitForSeconds(1f);
-                waitingTMP.text = "...";
-                yield return new WaitForSeconds(1f);
-                waitingTMP.text = "";
+                if (caught || isServed) break;
+                if (waitingTMP.text.Length < 3)
+                    waitingTMP.text += ".";
+                else waitingTMP.text = "";
                 yield return new WaitForSeconds(1f);
             }
             
