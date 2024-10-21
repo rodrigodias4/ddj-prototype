@@ -2,7 +2,7 @@ using System.Collections;
 using Assets.Scripts.Characters;
 using UnityEngine;
 using UnityEngine.UI;
-// using Assets.Scripts.Character.Customer;
+using Assets.Scripts.Characters;
 
 public class SpecialState : State
 {
@@ -175,8 +175,8 @@ public class SpecialState : State
 
         if (hitObject != null) // if hit
         {
-            Customer c = hitObject.GetComponent<Customer>();
-            c.DisableCustomer();
+            NPC c = hitObject.GetComponent<NPC>();
+            c.GetCaught();
             Rigidbody rb = hitObject.GetComponent<Rigidbody>();
             if ( slider.value > 0.5){
                 Debug.Log(slider.value + "Killed");
@@ -186,7 +186,7 @@ public class SpecialState : State
             }else if (slider.value <= 0.5 && slider.value > 0.25){
                 Debug.Log(slider.value + "Grappled");
                 while (Vector3.Distance(hitObject.transform.position, character.transform.position) > 1.5f 
-                        && !c.seated)
+                        && c.CanBeCaught())
                 {
                     // Move the object toward the player over time
                     Vector3 direction = (character.transform.position - hitObject.transform.position).normalized;
@@ -203,13 +203,13 @@ public class SpecialState : State
 
                     yield return null;  // Wait for the next frame
                 }
-                c.EnableCustomer();
+                c.GetUnCaught();
             }else{
                 Debug.Log(slider.value + "Vaguely Nudged");
                 // Nudge code comes here 
                 Vector3 nudgeDirection = (hitObject.transform.position - character.transform.position).normalized;
                 rb.AddForce(nudgeDirection * 5f, ForceMode.Impulse);  // Adjust force as needed
-                c.EnableCustomer();
+                c.GetUnCaught();
                 yield return character.StartCoroutine(AnimateTentacle(hitObject.transform.position));
             }
         }else{

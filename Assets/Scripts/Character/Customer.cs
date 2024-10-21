@@ -162,12 +162,16 @@ namespace Assets.Scripts.Characters
             Destroy(gameObject);
         }
 
-        public void DisableCustomer(){
+        public override void GetCaught(){
             caught = true;
         }
 
-        public void EnableCustomer(){
+        public override void GetUnCaught(){
             caught = false;
+        }
+
+        public override bool CanBeCaught(){
+            return !seated;
         }
 
         private IEnumerator EatFood(float eatingTime)
