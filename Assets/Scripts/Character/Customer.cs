@@ -11,6 +11,7 @@ namespace Assets.Scripts.Characters
         public enum Order { Burger, Ham, Stew };
         public float patience = 20f;       // How long the customer will wait before leaving
         public bool isServed = false;      // Whether the customer has been served
+        private bool caught = false;
         [SerializeField] private float waitTime = 0f;       // Internal tracking of how long the customer has waited
         private float eatingTime = 3f;     // How long the customer takes to eat
         private bool growingImpatient = false;
@@ -30,8 +31,8 @@ namespace Assets.Scripts.Characters
         
         [SerializeField] GameObject deathParticlesPrefab;
 
-        private bool caught = false;
-
+        [SerializeField] private TextMeshProUGUI waitingTMP;
+        
         // Reference to the speech bubble components
         private GameObject speechBubble;
         private TMP_Text speechBubbleText;
@@ -74,6 +75,8 @@ namespace Assets.Scripts.Characters
             
             StartCoroutine(RotateRandomly());
             transform.rotation = Quaternion.AngleAxis(randomIdleRotationAngle, Vector3.up);
+
+            StartCoroutine(WaitingText());
         }
 
         // Show the speech bubble with the customer's order
@@ -167,16 +170,15 @@ namespace Assets.Scripts.Characters
             if (caught) {
                 //Debug.Log($"{characterName} has been caught!");
                 growingImpatient = false;
-                return;
             }
             
             // Make sure the speech bubble is always facing the camera
-            /*if (speechBubble != null && mainCamera != null)
+            if (speechBubble != null && mainCamera != null)
             {
                 // Make the speech bubble look at the camera
                 speechBubble.transform.LookAt(speechBubble.transform.position + mainCamera.transform.rotation * Vector3.forward,
                     mainCamera.transform.rotation * Vector3.up);
-            }*/
+            }
         }
 
         private void FixedUpdate()
@@ -220,6 +222,7 @@ namespace Assets.Scripts.Characters
             growingImpatient = false;
             interactableCustomer.enableTooltip = true;
             CreateOrderVisual();
+            StartCoroutine(WaitingText());
         }
 
         // Handle customer death/cleanup logic
@@ -340,5 +343,24 @@ namespace Assets.Scripts.Characters
                 foodVisual.transform.rotation = Quaternion.Euler(0, customerOrder == Order.Ham ? 180 : 0, 0);
             }
         }
+
+        public IEnumerator WaitingText()
+        {
+            yield return new WaitForSeconds(3f);
+
+            while (!caught && !isServed)
+            {
+                waitingTMP.text = ".";
+                yield return new WaitForSeconds(1f);
+                waitingTMP.text = "..";
+                yield return new WaitForSeconds(1f);
+                waitingTMP.text = "...";
+                yield return new WaitForSeconds(1f);
+                waitingTMP.text = "";
+                yield return new WaitForSeconds(1f);
+            }
+            
+            waitingTMP.text = "";
+        }   
     }
 }

@@ -13,7 +13,7 @@ public class InteractableCustomer : InteractableItem
     
     public override string GetTooltip()
     {
-        return $"Give held food";
+        return enableTooltip ? $"Give held food" : "";
     }
 
     public override void LateUpdate()
