@@ -36,7 +36,7 @@ public class DashState : State
 	private IEnumerator EndDash()
 	{
 		yield return new WaitForSeconds(character.dashDuration);
-		character.TransitionToState(new MoveState(character));
+		character.TransitionToState(character.ChooseMovementState());
 	}
 
 	public override void CustomerHit()

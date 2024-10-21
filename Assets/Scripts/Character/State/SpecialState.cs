@@ -222,7 +222,7 @@ public class SpecialState : State
 
         Debug.Log("Special complete.");
         lineRenderer.enabled = false;
-        character.TransitionToState(new MoveState(character));
+        character.TransitionToState(character.ChooseMovementState());
     }
 
     private IEnumerator AnimateTentacle(Vector3 target){

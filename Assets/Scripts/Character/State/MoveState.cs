@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class MoveState : State
 {
-	private Matrix4x4 isometricMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 45, 0));
-	public Vector3 movementInput;
+    protected Matrix4x4 isometricMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 45, 0));
+    protected Vector3 movementInput;
 
 	public MoveState(CharacterMovement character) : base(character)
 	{
