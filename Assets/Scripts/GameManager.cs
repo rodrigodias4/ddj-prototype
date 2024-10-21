@@ -34,6 +34,11 @@ public class GameManager : MonoBehaviour
             {
                 StartCoroutine(PauseGame());
             }
+
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                TakeScreenshot();
+            }
         }
         // Game paused
         else
@@ -48,6 +53,11 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(UnpauseGame());
             }
         }
+    }
+
+    private void TakeScreenshot()
+    {
+        ScreenCapture.CaptureScreenshot($"{System.DateTime.Now:yyyyMMddhhmmss}.png");
     }
 
     public void ReloadScene()
