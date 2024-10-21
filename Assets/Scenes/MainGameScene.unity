@@ -2533,18 +2533,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 3092360118344396718, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
-      propertyPath: m_Name
-      value: PauseOverlayDim
-      objectReference: {fileID: 0}
-    - target: {fileID: 3550722447037164477, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6649625503343708981, guid: 4b861a985c96c6f488fcdfeddab00035, type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
