@@ -39,8 +39,8 @@ public class ScoreCalculation : MonoBehaviour
     void Update()
     {
 
-        score = dishCounter * 50 - customerKilled * 100 + tips;
-        scoreText.text = "Score: " + score;
+        score = (int)Mathf.Clamp(dishCounter * 50 - customerKilled * 100 + tips, 0, Mathf.Infinity);
+        scoreText.text = score.ToString();
         // If the game is over, the score is calculated
         if (timer.timeremaining <= 0)
         {
@@ -48,8 +48,6 @@ public class ScoreCalculation : MonoBehaviour
             scoreText.gameObject.SetActive(false);
             finalScoreText.text = "Score: " + score;
             highScoreText.text = "Hi Score: " + highScore;
-            finalScoreText.color = Color.yellow;
-            highScoreText.color = Color.yellow;
             finalScoreText.gameObject.SetActive(true);
             Debug.Log("Score: " + score);
             highScoreText.gameObject.SetActive(true);
