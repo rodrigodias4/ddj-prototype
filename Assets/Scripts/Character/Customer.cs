@@ -206,6 +206,7 @@ namespace Assets.Scripts.Characters
                 Debug.Log($"{characterName} got impatient and wants to leave the diner without being served.");
             }
             Destroy(gameObject);  // Destroy the customer object
+            if (orderVisual is not null) Destroy(orderVisual.gameObject);
             // Notify CustomerManager that the customer has left
             customerManager?.OnCustomerLeft(this);
         }
