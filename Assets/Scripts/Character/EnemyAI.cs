@@ -9,10 +9,12 @@ namespace Assets.Scripts.Characters{
     private Transform player;
     private bool caught = false;
     public float pushForce = 5f;   // The force to push the player
-
+    public float lifetime = 30f;   // The time in seconds before the enemy is destroyed
     protected override void  Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        // Start the self-destruction countdown
+        StartCoroutine(DestroyAfterTime(lifetime));
     }
 
     public void SetTarget(Transform target)
@@ -71,6 +73,13 @@ namespace Assets.Scripts.Characters{
         Debug.Log($"{characterName} is dying.");
 
         Destroy(gameObject);
+    }
+
+    // Coroutine to destroy the enemy after a certain amount of time
+    IEnumerator DestroyAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Destroy(gameObject);  // Destroy the enemy
     }
 }
 
