@@ -5,12 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class TutorialScreen : MonoBehaviour
 {
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        if (Input.anyKeyDown)
+        StartCoroutine(PressAnyKey());
+    }
+
+    private IEnumerator PressAnyKey()
+    {
+        yield return new WaitForSeconds(1f);
+
+        while (!Input.anyKeyDown)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            yield return null;
         }
+        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
