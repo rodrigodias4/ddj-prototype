@@ -32,6 +32,7 @@ namespace Assets.Scripts.Characters
         [SerializeField] GameObject deathParticlesPrefab;
 
         [SerializeField] private TextMeshProUGUI waitingTMP;
+        [SerializeField] private GameObject cross;
         
         // Reference to the speech bubble components
         private GameObject speechBubble;
@@ -104,9 +105,10 @@ namespace Assets.Scripts.Characters
                     Debug.Log($"{characterName} has been served the wrong order.");
                     //speechBubbleText.text = "WRONG!!";
                     // StartCoroutine(DefaultMessage(1f));
-                    yield return StartCoroutine(DefaultMessage(1f));
+                    //yield return StartCoroutine(DefaultMessage(1f));
                     //speechBubbleText.text = customerOrder.ToString();
                     ShowSpeechBubble();
+                    StartCoroutine(WrongOrderVisual());
                 }else{
                     interactableCustomer.enabled = false;
                     isServed = true;
@@ -211,6 +213,7 @@ namespace Assets.Scripts.Characters
         public void Sit(Chair chair)
         {
             interactableCustomer.enabled = true;
+            interactableCustomer.enableTooltip = true;
             transform.position = chair.chairPosition.position + new Vector3(0, 1f, 0);
             patience *= 2;  // Double the patience when seated
             occupiedChair = chair;
@@ -220,7 +223,6 @@ namespace Assets.Scripts.Characters
             rb.isKinematic = true;  // Disable physics when seated
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
             growingImpatient = false;
-            interactableCustomer.enableTooltip = true;
             CreateOrderVisual();
             StartCoroutine(WaitingText());
         }
@@ -361,6 +363,15 @@ namespace Assets.Scripts.Characters
             }
             
             waitingTMP.text = "";
-        }   
+        }
+
+        public IEnumerator WrongOrderVisual()
+        {
+            cross.SetActive(true);
+            
+            yield return new WaitForSeconds(2f);
+            
+            cross.SetActive(false);
+        }
     }
 }

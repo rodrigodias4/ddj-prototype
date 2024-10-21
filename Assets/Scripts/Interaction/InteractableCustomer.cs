@@ -4,16 +4,11 @@ using UnityEngine;
 public class InteractableCustomer : InteractableItem
 {
     public Customer customer;
-    public bool enableTooltip;
-
-    public override void Start()
-    {
-        enableTooltip = false;
-    }
+    public bool enableTooltip = false;
     
     public override string GetTooltip()
     {
-        return enableTooltip ? $"Give held food" : "";
+        return enableTooltip ? "Give Food" : "";
     }
 
     public override void LateUpdate()
