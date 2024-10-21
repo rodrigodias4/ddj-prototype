@@ -2,7 +2,6 @@ using System.Collections;
 using Assets.Scripts.Characters;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.Scripts.Characters;
 
 public class SpecialState : State
 {
@@ -190,7 +189,7 @@ public class SpecialState : State
                 {
                     // Move the object toward the player over time
                     Vector3 direction = (character.transform.position - hitObject.transform.position).normalized;
-                    rb.MovePosition(hitObject.transform.position + direction * Time.deltaTime * 15f);  // Adjust speed as needed
+                    rb.MovePosition(hitObject.transform.position + direction * Time.deltaTime * 12f);  // Adjust speed as needed
                     if (lineRenderer.enabled && grappleTarget != null)
                     {
                         Vector3 pos = character.transform.position;

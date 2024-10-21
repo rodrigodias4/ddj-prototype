@@ -24,7 +24,6 @@ public class CharacterInteract : MonoBehaviour
     void Update()
     {
         Collider[] interactColliders = Physics.OverlapSphere(transform.position, interactRange);
-        Collider closestInteractCollider = null;
         closestInteractable = null;
         float closestDistance = Mathf.Infinity;
         foreach (Collider interactCollider in interactColliders)
@@ -44,7 +43,7 @@ public class CharacterInteract : MonoBehaviour
             closestInteractable.InteractRange();
             uiInteract.transform.position = mainCamera.WorldToScreenPoint(closestInteractable.GetTransform().position) + new Vector3(10f, 20f, 0f);
             uiInteractable.SetText(closestInteractable.GetTooltip());
-            uiInteract.SetActive(true);
+            if(closestInteractable.GetTooltip() != "") uiInteract.SetActive(true);
         }
         else
         {

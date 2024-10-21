@@ -8,6 +8,7 @@ namespace Assets.Scripts.Characters{
     private NavMeshAgent agent;
     private Transform player;
     private bool caught = false;
+    [SerializeField] GameObject deathParticlesPrefab;
     public float pushForce = 5f;   // The force to push the player
     public float lifetime = 30f;   // The time in seconds before the enemy is destroyed
     protected override void  Start()
@@ -73,6 +74,7 @@ namespace Assets.Scripts.Characters{
         Debug.Log($"{characterName} is dying.");
 
         Destroy(gameObject);
+        StartCoroutine(DeathParticles());
     }
 
     // Coroutine to destroy the enemy after a certain amount of time
@@ -81,6 +83,22 @@ namespace Assets.Scripts.Characters{
         yield return new WaitForSeconds(time);
         Destroy(gameObject);  // Destroy the enemy
     }
+
+        private IEnumerator DeathParticles()
+        {
+            GameObject particles = Instantiate(deathParticlesPrefab, transform.position + Vector3.up, Quaternion.identity);
+            
+            foreach (ParticleSystem particle in particles.GetComponentsInChildren<ParticleSystem>())
+            {
+                particle.Play();
+            }
+
+            yield return new WaitForSeconds(10f);
+            
+            Destroy(particles);
+        }
+
+
 }
 
 }

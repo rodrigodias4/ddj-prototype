@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -20,12 +21,18 @@ public class CharacterMovement : MonoBehaviour
 	public float dashCooldownCur = 0f; // Added explicit for possible visual in UI
 	public CharacterInteract characterInteract;
 	private bool IsDinerScene;
-
+    public Transform handTransform;	// Add a Transform to represent the hand where food will be held
+	public GameObject currentFood;
 	// States
 	private State currentState;
+	public enum Order { Burger, Ham, Stew, None };
+	public Order order = Order.None;
+	
+	private GameManager gameManager;
 
 	void Start()
 	{
+		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		characterInteract = GetComponent<CharacterInteract>();
 		Assert.IsNotNull(characterInteract);
 		
@@ -36,10 +43,14 @@ public class CharacterMovement : MonoBehaviour
 		// check which movementstate to use
 		Scene currentScene = SceneManager.GetActiveScene();	
         if (currentScene.name == "MainGameScene"){IsDinerScene = true;}
+
+		// Add a hand transform to the character
+		handTransform = transform.Find("Hand");
 	}
 
 	void Update()
 	{
+		if (gameManager.gameOver) return;
 		currentState.HandleInput();
 		currentState.Update();
 		DecrementCooldowns();
@@ -85,5 +96,30 @@ public class CharacterMovement : MonoBehaviour
 	public void CustomerHit()
 	{
 		currentState.CustomerHit();
+	}
+	public void ReplaceHeldFood(GameObject newFoodPrefab, Order order)
+    {
+		this.order = order;
+        // If there is already food, remove it
+        if (currentFood != null)
+        {
+            Destroy(currentFood);  // Remove the old food
+        }
+
+        // Instantiate the new food prefab and attach it to the hand
+        currentFood = Instantiate(newFoodPrefab, handTransform);
+
+        // Reset the position and rotation for correct placement
+        currentFood.transform.localPosition = Vector3.zero;
+        currentFood.transform.localRotation = Quaternion.identity;
+    }
+
+	public void RemoveHeldFood()
+	{
+		this.order = Order.None;
+		if (currentFood != null)
+		{
+			Destroy(currentFood);
+		}
 	}
 }

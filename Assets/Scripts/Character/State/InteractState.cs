@@ -12,9 +12,8 @@ public class InteractState : State
 	public override void Enter()
 	{
 		Debug.Log("Entering Interact State");
-		character.characterInteract.GetClosestInteractable()?.Interact();
+		character.characterInteract.GetClosestInteractable()?.Interact(character);
 	}
-
 	public override void Update()
 	{
 		// After interaction logic is done, return to Move state
