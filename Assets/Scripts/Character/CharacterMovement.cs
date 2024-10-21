@@ -24,9 +24,12 @@ public class CharacterMovement : MonoBehaviour
 	private State currentState;
 	public enum Order { Burger, Ham, Stew, None };
 	public Order order = Order.None;
+	
+	private GameManager gameManager;
 
 	void Start()
 	{
+		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		characterInteract = GetComponent<CharacterInteract>();
 		Assert.IsNotNull(characterInteract);
 		
@@ -40,6 +43,7 @@ public class CharacterMovement : MonoBehaviour
 
 	void Update()
 	{
+		if (gameManager.gameOver) return;
 		currentState.HandleInput();
 		currentState.Update();
 		DecrementCooldowns();

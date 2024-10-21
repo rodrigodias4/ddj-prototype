@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     private bool gamePaused = false;
 
     public bool gameOver;
-    public int highScore;
 
     void Start()
     {
@@ -27,6 +26,8 @@ public class GameManager : MonoBehaviour
     // Check for the Escape key press to reload the scene
     void Update()
     {
+        if (gameOver) return;
+        
         // Game running
         if (!gamePaused)
         {

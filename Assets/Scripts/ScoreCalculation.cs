@@ -13,11 +13,15 @@ public class ScoreCalculation : MonoBehaviour
     private static int dishCounter;
     private static int customerKilled;
     private static int tips;
+    public int highScore;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI scoreSubText;
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI finalScoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
+    [SerializeField] private GameObject finalScoreLabel;
+    [SerializeField] private GameObject highScoreLabel;
+    [SerializeField] private GameObject exitButton;
     [SerializeField] private GameObject panel;
 
     [SerializeField] private Timer.Timer timer;
@@ -34,7 +38,7 @@ public class ScoreCalculation : MonoBehaviour
         customerKilled = 0;
         tips = 0;
         gameManager.gameOver = false;
-        gameManager.highScore = PlayerPrefs.GetInt("HighScore", 0);
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
         Debug.Log("Score: " + score);
         scoreText.gameObject.SetActive(true);
         finalScoreText.gameObject.SetActive(false);
@@ -56,19 +60,25 @@ public class ScoreCalculation : MonoBehaviour
             scoreSubText.gameObject.SetActive(false);
             timerText.gameObject.SetActive(false);
             
-            finalScoreText.text = "Score: " + score;
-            highScoreText.text = "High Score: " + gameManager.highScore;
+            finalScoreText.text = score.ToString();
+            highScoreText.text = highScore.ToString();
+            
+            if (highScore > PlayerPrefs.GetInt("HighScore", 0))
+                PlayerPrefs.SetInt("HighScore", highScore);
             
             finalScoreText.gameObject.SetActive(true);
             highScoreText.gameObject.SetActive(true);
+            finalScoreLabel.SetActive(true);
+            highScoreLabel.SetActive(true);
+            exitButton.SetActive(true);
             panel.SetActive(true);
             
             Debug.Log("Score: " + score);
             EndGameStopTime();
         }
 
-        if (score > gameManager.highScore){
-            gameManager.highScore = score;
+        if (score > highScore){
+            highScore = score;
         }
     }
 
