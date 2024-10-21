@@ -19,7 +19,7 @@ public class InteractState : State
 		// After interaction logic is done, return to Move state
 		if (!Input.GetKey(KeyCode.E))
 		{
-			character.TransitionToState(new MoveState(character));
+			character.TransitionToState(character.ChooseMovementState());
 		}
 	}
 

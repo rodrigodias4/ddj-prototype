@@ -5,6 +5,7 @@ namespace Assets.Scripts.Characters {
     {
         // Additional properties for NPCs
         public string[] dialogues;
+        // private bool caught = false;
 
         // Start is called before the first frame update
         protected override void Start()
@@ -42,6 +43,21 @@ namespace Assets.Scripts.Characters {
             base.Die();
             Debug.Log($"{characterName} was an NPC and has now disappeared.");
             // Add additional NPC death behavior if needed
+        }
+
+        public virtual void GetCaught()
+        {
+            // caught = true;
+        }
+
+        public virtual void GetUnCaught()
+        {
+            // caught = false;
+        }
+
+        public virtual bool CanBeCaught()
+        {
+            return false;
         }
     }
 }

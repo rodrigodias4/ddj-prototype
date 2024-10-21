@@ -8,7 +8,7 @@ public class SystemManager : MonoBehaviour
     void Update()
     {
         // Press the "Escape" key to reload the scene
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Backspace))
         {
             ReloadScene();
         }

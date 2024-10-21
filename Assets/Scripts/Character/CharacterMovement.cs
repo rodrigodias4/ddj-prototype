@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class CharacterMovement : MonoBehaviour
 {
 	public UnityEvent onCharacterDashStart;
 	public UnityEvent onCharacterDashEnd;
-	
+
+	public MoveState movementState; //when ur in da diner ur not bound by gravity. congratulations
 	public Rigidbody rb;
 	public float movementSpeed = 10f;
 	public float dashDistance = 7.5f;
@@ -18,6 +20,7 @@ public class CharacterMovement : MonoBehaviour
 	public float dashCooldown = 2f;
 	public float dashCooldownCur = 0f; // Added explicit for possible visual in UI
 	public CharacterInteract characterInteract;
+	private bool IsDinerScene;
     public Transform handTransform;	// Add a Transform to represent the hand where food will be held
 	public GameObject currentFood;
 	// States
@@ -35,7 +38,11 @@ public class CharacterMovement : MonoBehaviour
 		
 		// Set initial state
 		rb = GetComponent<Rigidbody>();
-		TransitionToState(new MoveState(this));
+		TransitionToState(this.ChooseMovementState());
+
+		// check which movementstate to use
+		Scene currentScene = SceneManager.GetActiveScene();	
+        if (currentScene.name == "MainGameScene"){IsDinerScene = true;}
 
 		// Add a hand transform to the character
 		handTransform = transform.Find("Hand");
@@ -69,6 +76,18 @@ public class CharacterMovement : MonoBehaviour
 		}
 	}
 
+	public State ChooseMovementState(){
+        if (IsDinerScene)
+        {
+            // Use MoveState for MainGameScene
+            return new MoveState(this);
+        }
+        else
+        {
+            // Use AddForceMoveState for other scenes
+            return new AddForceMoveState(this);
+        }
+	}
 	private void DecrementCooldowns()
 	{
 		dashCooldownCur = Mathf.Clamp(dashCooldownCur - Time.deltaTime, 0f, dashCooldown);
